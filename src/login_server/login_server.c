@@ -199,6 +199,7 @@ unsigned char PacketE2Data[2808] = { 0 };
 /* String sent to server to retrieve IP address. */
 
 char* HTTP_REQ = "GET http://www.pioneer2.net/remote.php HTTP/1.0\r\n\r\n\r\n";
+char error_buffer[1024] = { 0 };
 
 /* Populated by load_config_file(): */
 
@@ -673,7 +674,7 @@ void WriteLog(char *fmt, ...)
 	strcpy (text + vsprintf( text,fmt,args), "\r\n");
 	va_end (args);
 
-	fp = fopen ( "login.log", "a");
+    fopen_s(&fp, "login.log", "a");
 	if (!fp)
 	{
 		printf ("Unable to log to login.log\n");
@@ -835,7 +836,8 @@ void construct0xEB()
 	unsigned char ch, ch6;
 	unsigned ch2, ch3, ch4, ch5, ch7;
 
-	if ( ( fp = fopen ("e8send.txt", "r" ) ) == NULL )
+    fopen_s(&fp, "e8send.txt", "r");
+	if (fp == NULL )
 	{
 		printf ("Missing e8send.txt\n");
 		printf ("Hit [ENTER]");
@@ -854,7 +856,8 @@ void construct0xEB()
 			EBFiles[ch][ch2--]  = 0x00;
 		EBFiles[ch][ch2] = 0;
 		printf ("\nLoading data from %s ... ", &EBFiles[ch][0]);
-		if ( ( fpb = fopen (&EBFiles[ch][0], "rb") ) == NULL )
+        fopen_s(&fpb, EBFiles[ch], "rb");
+		if ( fpb == NULL )
 		{
 			printf ("Could not open %s!\n", &EBFiles[ch][0]);
 			printf ("Hit [ENTER]");
@@ -941,7 +944,8 @@ void load_config_file()
 
 	FILE* fp;
 
-	if ( ( fp = fopen ("tethealla.ini", "r" ) ) == NULL )
+    fopen_s(&fp, "tethealla.ini", "r");
+	if (fp == NULL )
 	{
 		printf ("The configuration file tethealla.ini appears to be missing.\n");
 		printf ("Hit [ENTER]");
@@ -1217,7 +1221,7 @@ void construct0xA0()
 				PacketA0Data[ch2++] = 0x00;
 				PacketA0Data[ch2++] = 0x28;
 				PacketA0Data[ch2++] = 0x00;
-				_itoa (shipcheck->playerCount, &playerCountString[0], 10);
+				_itoa_s (shipcheck->playerCount, playerCountString, _countof(playerCountString), 10);
 				shipName = &playerCountString[0];
 				while (*shipName != 0x00)
 				{
@@ -4778,7 +4782,7 @@ void CharacterProcessPacket (BANANA* client)
 				memcpy (&client->encryptbuf[0], &PacketE6[0], sizeof (PacketE6));
 				*(unsigned *) &client->encryptbuf[0x10] = gcn;
 				client->guildcard = gcn;
-				_itoa (gcn, &client->guildcard_string[0], 10); /* auth'd, bitch */
+				_itoa_s (gcn, client->guildcard_string, _countof(client->guildcard_string), 10); /* auth'd, bitch */
 				// Store some security shit in the E6 packet.
 				*(long long*) &client->encryptbuf[0x38] = security_sixtyfour_check;
 				if (security_thirtytwo_check == 0)
@@ -5219,7 +5223,8 @@ void LoadQuestAllow ()
 	FILE* fp;
 
 	quest_numallows = 0;
-	if ( ( fp = fopen ("questitem.txt", "r" ) ) == NULL )
+    fopen_s(&fp, "questitem.txt", "r");
+	if ( fp== NULL )
 	{
 		printf ("questitem.txt is missing.\n");
 		printf ("Press [ENTER] to quit...");
@@ -5300,17 +5305,17 @@ void LoadDropData()
 						strcat (&id_file[0], "drop\\ep4_mob_");
 						break;
 					}
-					_itoa (d, &convert_ch[0], 10);
+					_itoa_s (d, convert_ch, _countof(convert_ch), 10);
 					strcat (&id_file[0], &convert_ch[0]);
 					strcat (&id_file[0], "_");
-					_itoa (ch2, &convert_ch[0], 10);
+					_itoa_s (ch2, convert_ch, _countof(convert_ch), 10);
 					strcat (&id_file[0], &convert_ch[0]);
 					strcat (&id_file[0], ".txt");
 					ch3 = 0;
-					fp = fopen ( &id_file[0], "r" );
+                    fopen_s(&fp, id_file, "r");
 					if (!fp)
 					{
-						printf ("Drop table not found \"%s\"", id_file[0] );
+						printf ("Drop table not found \"%s\"", id_file );
 						printf ("Hit [ENTER] to quit...");
                         getchar();
 						exit   (1);
@@ -5329,12 +5334,12 @@ void LoadDropData()
 							{
 								if ( strlen ( &dp[0] ) < 6 )
 								{
-									printf ("Corrupted drop table \"%s\"", id_file[0] );
+									printf ("Corrupted drop table \"%s\"", id_file );
 									printf ("Hit [ENTER] to quit...");
                                     getchar();
 									exit   (1);
 								}
-								_strupr ( &dp[0] );
+								_strupr_s (dp, _countof(dp));
 								rt_table[ch3++] = hexToByte ( &dp[0] );
 								rt_table[ch3++] = hexToByte ( &dp[2] );
 								rt_table[ch3++] = hexToByte ( &dp[4] );
@@ -5348,10 +5353,10 @@ void LoadDropData()
 					id_file[9]  = 98;
 					id_file[10] = 111;
 					id_file[11] = 120;
-					fp = fopen ( &id_file[0], "r" );
+                    fopen_s(&fp, id_file, "r");
 					if (!fp)
 					{
-						printf ("Drop table not found \"%s\"", id_file[0] );
+						printf ("Drop table not found \"%s\"", id_file );
 						printf ("Hit [ENTER] to quit...");
                         getchar();
 						exit   (1);
@@ -5374,12 +5379,12 @@ void LoadDropData()
 							case 0x02:
 								if ( strlen ( &dp[0] ) < 6 )
 								{
-									printf ("Corrupted drop table \"%s\"", id_file[0] );
+									printf ("Corrupted drop table \"%s\"", id_file );
 									printf ("Hit [ENTER] to quit...");
                                     getchar();
 									exit   (1);
 								}
-								_strupr ( &dp[0] );
+								_strupr_s ( dp, _countof(dp) );
 								rt_table[0x1B3 + ((ch3-0x194)*4)] = hexToByte ( &dp[0] );
 								rt_table[0x1B4 + ((ch3-0x194)*4)] = hexToByte ( &dp[2] );
 								rt_table[0x1B5 + ((ch3-0x194)*4)] = hexToByte ( &dp[4] );
@@ -5404,7 +5409,7 @@ void UpdateDataFile ( const char* filename, unsigned count, void* data, unsigned
 	FILE* fp;
 	unsigned fs;
 
-	fp = fopen (filename, "r+b");
+    fopen_s(&fp, filename, "r+b");
 	if (fp)
 	{
 		fseek (fp, 0, SEEK_END);
@@ -5420,7 +5425,7 @@ void UpdateDataFile ( const char* filename, unsigned count, void* data, unsigned
 	}
 	else
 	{
-		fp = fopen (filename, "wb");
+        fopen_s(&fp, filename, "wb");
 		if (fp)
 		{
 			fwrite (data, 1, record_size, fp); // Has to be the first record...
@@ -5438,7 +5443,7 @@ void DumpDataFile ( const char* filename, unsigned* count, void** data, unsigned
 	unsigned ch;
 
 	printf ("Dumping \"%s\" ... ", filename);
-	fp = fopen (filename, "wb");
+    fopen_s(&fp, filename, "wb");
 	if (fp)
 	{
 		for (ch=0;ch<*count;ch++)
@@ -5456,7 +5461,7 @@ void LoadDataFile ( const char* filename, unsigned* count, void** data, unsigned
 	unsigned ch;
 
 	printf ("Loading \"%s\" ... ", filename);
-	fp = fopen (filename, "rb");
+    fopen_s(&fp, filename, "rb");
 	if (fp)
 	{
 		fseek (fp, 0, SEEK_END);
@@ -5600,7 +5605,7 @@ main( int argc, char * argv[] )
 	LoadDataFile ("team.dat", &num_teams, &team_data[0], sizeof(L_TEAM_DATA));
 #endif
 	printf ("Loading PlyLevelTbl.bin ...");
-	fp = fopen ( "PlyLevelTbl.bin", "rb" );
+    fopen_s(&fp, "PlyLevelTbl.bin", "rb");
 	if (!fp)
 	{
 		printf ("Can't proceed without plyleveltbl.bin!\n");
@@ -5612,7 +5617,7 @@ main( int argc, char * argv[] )
 	fclose ( fp );
 	printf (" OK!\n");
 	printf ("Loading 0xE2 base packet ...");
-	fp = fopen ( "e2base.bin", "rb" );
+    fopen_s(&fp, "e2base.bin", "rb");
 	if (!fp)
 	{
 		printf ("Can't proceed without e2base.bin!\n");
@@ -5624,7 +5629,7 @@ main( int argc, char * argv[] )
 	fclose ( fp );
 	printf (" OK!\n");
 	printf ("Loading 0xE7 base packet ...");
-	fp = fopen ( "e7base.bin", "rb" );
+    fopen_s(&fp, "e7base.bin", "rb");
 	if (!fp)
 	{
 		printf ("Can't proceed without e7base.bin!\n");
@@ -5771,7 +5776,7 @@ main( int argc, char * argv[] )
 	printf (" OK!\n");
 
 	printf ("Loading default.flag ...");
-	fp = fopen ( "default.flag", "rb" );
+    fopen_s(&fp, "default.flag", "rb");
 	if (!fp)
 	{
 		printf ("Can't proceed without default.flag!\n");
@@ -6494,7 +6499,7 @@ int tcp_sock_open(struct in_addr ip, int port)
 *
 *****************************************************************************/
 void debug_perror( char * msg ) {
-	debug( "%s : %s\n" , msg , strerror(errno) );
+	debug( "%s : %s\n" , msg , strerror_s(error_buffer, _countof(error_buffer), errno) );
 }
 /*****************************************************************************/
 void debug(char *fmt, ...)

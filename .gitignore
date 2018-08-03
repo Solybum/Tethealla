@@ -330,3 +330,24 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+.debug/login/account_add.exe
+.debug/login/login_server.exe
+.debug/login/libmysql.dll
+.debug/login/tethealla.ini
+
+.debug/login_nosql/account_add.exe
+.debug/login_nosql/login_server.exe
+.debug/login_nosql/libmysql.dll
+.debug/login_nosql/tethealla.ini
+
+.debug/patch/patches
+.debug/patch/patch_server.exe
+.debug/patch/patch.ini
+.debug/login/tethealla.ini
+.debug/patch/welcome.txt
+
+.debug/ship/ship_server.exe
+.debug/ship/lang.ini
+.debug/ship/localgms.ini
+.debug/ship/ship.ini

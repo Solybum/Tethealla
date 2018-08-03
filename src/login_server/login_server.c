@@ -5257,149 +5257,34 @@ void LoadQuestAllow ()
 	printf ("Number of quest item allowances: %u\n", quest_numallows);
 }
 
-
-void LoadDropData()
+int LoadDropData()
 {
-	unsigned ch,ch2,ch3,d;
-	unsigned char* rt_table;
-	char id_file[256];
-	FILE* fp;
-	char convert_ch[10];
-	int look_rate;
+    FILE* fp;
+    unsigned temp_rt[0x200 * 10 * 4] = { 0 };
 
-	printf ("Loading drop data...\n");
+    printf("Loading drop data...\n");
 
-	// Each episode
-	for (ch=1;ch<5;ch++)
-	{
-		if (ch != 3)
-		{
-			switch (ch)
-			{
-			case 0x01:
-				rt_table = (unsigned char*) &rt_tables_ep1[0];
-				break;
-			case 0x02:
-				rt_table = (unsigned char*) &rt_tables_ep2[0];
-				break;
-			case 0x04:
-				rt_table = (unsigned char*) &rt_tables_ep4[0];
-				break;
-			}
-			// Each difficulty
-			for (d=0;d<4;d++)
-			{
-				// Each section ID
-				for (ch2=0;ch2<10;ch2++)
-				{
-					id_file[0] = 0;
-					switch (ch)
-					{
-					case 0x01:
-						strcat (&id_file[0], "drop\\ep1_mob_");
-						break;
-					case 0x02:
-						strcat (&id_file[0], "drop\\ep2_mob_");
-						break;
-					case 0x04:
-						strcat (&id_file[0], "drop\\ep4_mob_");
-						break;
-					}
-					_itoa_s (d, convert_ch, _countof(convert_ch), 10);
-					strcat (&id_file[0], &convert_ch[0]);
-					strcat (&id_file[0], "_");
-					_itoa_s (ch2, convert_ch, _countof(convert_ch), 10);
-					strcat (&id_file[0], &convert_ch[0]);
-					strcat (&id_file[0], ".txt");
-					ch3 = 0;
-                    fopen_s(&fp, id_file, "r");
-					if (!fp)
-					{
-						printf ("Drop table not found \"%s\"", id_file );
-						printf ("Hit [ENTER] to quit...");
-                        getchar();
-						exit   (1);
-					}
-					look_rate = 1;
-					while ( fgets ( &dp[0],  255, fp ) != NULL )
-					{
-						if ( dp[0] != 35 ) // not a comment
-						{
-							if ( look_rate )
-							{
-								rt_table[ch3++] = (unsigned char) atoi (&dp[0]);
-								look_rate = 0;
-							}
-							else
-							{
-								if ( strlen ( &dp[0] ) < 6 )
-								{
-									printf ("Corrupted drop table \"%s\"", id_file );
-									printf ("Hit [ENTER] to quit...");
-                                    getchar();
-									exit   (1);
-								}
-								_strupr_s (dp, _countof(dp));
-								rt_table[ch3++] = hexToByte ( &dp[0] );
-								rt_table[ch3++] = hexToByte ( &dp[2] );
-								rt_table[ch3++] = hexToByte ( &dp[4] );
-								look_rate = 1;
-							}
-						}
-					}
-					fclose (fp);
-					ch3 = 0x194;
-					memset (&rt_table[ch3], 0xFF, 30);
-					id_file[9]  = 98;
-					id_file[10] = 111;
-					id_file[11] = 120;
-                    fopen_s(&fp, id_file, "r");
-					if (!fp)
-					{
-						printf ("Drop table not found \"%s\"", id_file );
-						printf ("Hit [ENTER] to quit...");
-                        getchar();
-						exit   (1);
-					}
-					look_rate = 0;
-					while ( ( fgets ( &dp[0],  255, fp ) != NULL ) && ( ch3 < 0x1B2 ) )
-					{
-						if ( dp[0] != 35 ) // not a comment
-						{
-							switch ( look_rate )
-							{
-							case 0x00:
-								rt_table[ch3] = (unsigned char) atoi (&dp[0]);
-								look_rate = 1;
-								break;
-							case 0x01:
-								rt_table[0x1B2 + ((ch3-0x194)*4)] = (unsigned char) atoi (&dp[0]);
-								look_rate = 2;
-								break;
-							case 0x02:
-								if ( strlen ( &dp[0] ) < 6 )
-								{
-									printf ("Corrupted drop table \"%s\"", id_file );
-									printf ("Hit [ENTER] to quit...");
-                                    getchar();
-									exit   (1);
-								}
-								_strupr_s ( dp, _countof(dp) );
-								rt_table[0x1B3 + ((ch3-0x194)*4)] = hexToByte ( &dp[0] );
-								rt_table[0x1B4 + ((ch3-0x194)*4)] = hexToByte ( &dp[2] );
-								rt_table[0x1B5 + ((ch3-0x194)*4)] = hexToByte ( &dp[4] );
-								look_rate = 0;
-								ch3++;
-								break;
-							}
-						}
-					}
-					fclose (fp);
-					rt_table += 0x800;
-				}
-			}
-		}
-	}
+    fopen_s(&fp, "ItemRT.gsl", "rb");
+    if (fp == NULL)
+    {
+        printf("ItemRT.gsl not found");
+        return 1;
+    }
+    fseek(fp, 0, SEEK_END);
+    if (ftell(fp) != 0x53000)
+    {
+        printf("Invalid ItemRT.gsl size");
+        fclose(fp);
+        return 1;
+    }
+    fseek(fp, 0x3000, SEEK_SET);
+    fread(&rt_tables_ep1, 1, sizeof(rt_tables_ep1), fp);
+    fread(&rt_tables_ep2, 1, sizeof(rt_tables_ep2), fp);
+    fseek(fp, sizeof(rt_tables_ep1), SEEK_CUR);
+    fread(&rt_tables_ep4, 1, sizeof(rt_tables_ep4), fp);
+    fclose(fp);
+
+    return 0;
 }
 
 #ifdef NO_SQL

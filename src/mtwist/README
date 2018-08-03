@@ -1,0 +1,16 @@
+This is an implementation of the Mersenne Twist pseudorandom number
+generator, including both C and C++ interfaces and a set of functions
+for generating random variates from common distributions.
+
+To compile, you may need to define MT_NOINLINE or MT_LONG_LONG.
+
+The full documentation for the package is in the manual pages,
+mtwist.3 and randistrs.3.
+
+For more information, see the Web page for the package, at:
+
+	http://www.cs.hmc.edu/~geoff/mtwist.html
+
+or
+
+	http://www.lasr.cs.ucla.edu/geoff/mtwist.html

@@ -1,0 +1,14 @@
+1>------ Rebuild All started: Project: ship_server, Configuration: Debug Win32 ------
+1>Deleting intermediate and output files for project 'ship_server', configuration 'Debug|Win32'
+1>Compiling...
+1>ship_server.c
+1>Compiling manifest to resources...
+1>Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+1>Copyright (C) Microsoft Corporation.  All rights reserved.
+1>Linking...
+1>Embedding manifest...
+1>Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+1>Copyright (C) Microsoft Corporation.  All rights reserved.
+1>Build log was saved at "file://c:\tethealla\ship_server\Debug\BuildLog.htm"
+1>ship_server - 0 error(s), 0 warning(s)
+========== Rebuild All: 1 succeeded, 0 failed, 0 skipped ==========

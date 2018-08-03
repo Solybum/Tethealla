@@ -1,0 +1,321 @@
+.\"
+.\" $Id: randistrs.3,v 1.2 2001/06/19 00:41:17 geoff Exp $
+.\"
+.\" $Log: randistrs.3,v $
+.\" Revision 1.2  2001/06/19 00:41:17  geoff
+.\" Add documentation of the new "l" versions of all the functions.
+.\"
+.\" Revision 1.1  2001/06/18 10:04:20  geoff
+.\" Initial revision
+.\"
+.\" 
+.TH randistrs 3 "June 18, 2001" "" "Linux Programmer's Manual"
+.SH NAME
+rds_iuniform, rds_liuniform, rds_uniform, rds_luniform,
+rds_exponential, rds_lexponential, rds_erlang, rds_lerlang,
+rds_weibull, rds_lweibull, rds_normal, rds_lnormal, rds_lognormal,
+rds_llognormal, rds_triangular, rds_ltriangular, rds_empirical,
+rds_lempirical, rd_iuniform, rd_liuniform, rd_uniform, rd_luniform,
+rd_exponential, rd_lexponential, rd_erlang, rd_lerlang, rd_weibull,
+rd_lweibull, rd_normal, rd_lnormal, rd_lognormal, rd_llognormal,
+rd_triangular, rd_ltriangular, rd_empirical rd_lempirical \- generate
+pseudo-random numbers in various distributions
+.SH SYNOPSIS
+.nf
+.IR "#defines" " (see below)"
+.br
+.B
+#include "randistrs.h"
+.sp
+C interface:
+.R
+.sp
+.BI "long rds_iuniform(mt_state* " state ", long " lower ", long " upper ");"
+.sp
+.BI "long long rds_liuniform(mt_state* " state ","
+.BI "                  long long " lower ", long long " upper ");"
+.sp
+.BI "double rds_uniform(mt_state* " state ", double " lower ", double " upper ");"
+.sp
+.BI "double rds_luniform(mt_state* " state ", double " lower ", double " upper ");"
+.sp
+.BI "double rds_exponential(mt_state* " state ", double " mean ");"
+.sp
+.BI "double rds_lexponential(mt_state* " state ", double " mean ");"
+.sp
+.BI "double rds_erlang(mt_state* " state ", int " p ", double " mean ");"
+.sp
+.BI "double rds_lerlang(mt_state* " state ", int " p ", double " mean ");"
+.sp
+.BI "double rds_weibull(mt_state* " state ", double " shape ", double " scale ");"
+.sp
+.BI "double rds_lweibull(mt_state* " state ", double " shape ", double " scale ");"
+.sp
+.BI "double rds_normal(mt_state* " state ", double " mean ", double " sigma ");"
+.sp
+.BI "double rds_lnormal(mt_state* " state ", double " mean ", double " sigma ");"
+.sp
+.BI "double rds_lognormal(mt_state* " state ", double " shape ", double " scale ");"
+.sp
+.BI "double rds_llognormal(mt_state* " state ", double " shape ", double " scale ");"
+.sp
+.BI "double rds_triangular(mt_state* " state ", double " lower ","
+.BI "                      double " upper ", double " mode ");"
+.sp
+.BI "double rds_ltriangular(mt_state* " state ", double " lower ","
+.BI "                      double " upper ", double " mode ");"
+.sp
+.BI "double rds_empirical(mt_state* " state ", int " n_probs ","
+.BI "                     double* " values ", double* " probs ");"
+.sp
+.BI "double rds_lempirical(mt_state* " state ", int " n_probs ","
+.BI "                     double* " values ", double* " probs ");"
+.sp
+.BI "long rd_iuniform(long " lower ", long " upper ");"
+.sp
+.BI "long long rd_liuniform(long long " lower ", long long " upper ");"
+.sp
+.BI "double rd_uniform(double " lower ", double " upper ");"
+.sp
+.BI "double rd_luniform(double " lower ", double " upper ");"
+.sp
+.BI "double rd_exponential(double " mean ");"
+.sp
+.BI "double rd_lexponential(double " mean ");"
+.sp
+.BI "double rd_erlang(int " p ", double " mean ");"
+.sp
+.BI "double rd_lerlang(int " p ", double " mean ");"
+.sp
+.BI "double rd_weibull(double " shape ", double " scale ");"
+.sp
+.BI "double rd_lweibull(double " shape ", double " scale ");"
+.sp
+.BI "double rd_normal(double " mean ", double " sigma ");"
+.sp
+.BI "double rd_lnormal(double " mean ", double " sigma ");"
+.sp
+.BI "double rd_lognormal(double " shape ", double " scale ");"
+.sp
+.BI "double rd_llognormal(double " shape ", double " scale ");"
+.sp
+.BI "double rd_triangular(double " lower ", double " upper ", double " mode ");"
+.sp
+.BI "double rd_ltriangular(double " lower ", double " upper ", double " mode ");"
+.sp
+.BI "double rd_empirical(int " n_probs ", double* " values ", double* " probs ");"
+.sp
+.BI "double rd_lempirical(int " n_probs ", double* " values ", double* " probs ");"
+.sp
+.B "C++ interface:"
+.sp
+.BI "mt_distribution " rng ;
+.sp
+.BI "long " rng ".iuniform(long " lower ", long " upper ");"
+.sp
+.BI "long long " rng ".liuniform(long long " lower ", long long " upper ");"
+.sp
+.BI "double " rng ".uniform(double " lower ", double " upper ");"
+.sp
+.BI "double " rng ".luniform(double " lower ", double " upper ");"
+.sp
+.BI "double " rng ".exponential(double " mean ");"
+.sp
+.BI "double " rng ".lexponential(double " mean ");"
+.sp
+.BI "double " rng ".erlang(int " p ", double " mean ");"
+.sp
+.BI "double " rng ".lerlang(int " p ", double " mean ");"
+.sp
+.BI "double " rng ".weibull(double " shape ", double " scale ");"
+.sp
+.BI "double " rng ".lweibull(double " shape ", double " scale ");"
+.sp
+.BI "double " rng ".normal(double " mean ", double " sigma ");"
+.sp
+.BI "double " rng ".lnormal(double " mean ", double " sigma ");"
+.sp
+.BI "double " rng ".lognormal(double " shape ", double " scale ");"
+.sp
+.BI "double " rng ".llognormal(double " shape ", double " scale ");"
+.sp
+.BI "double " rng ".triangular(double " lower ", double " upper ", double " mode ");"
+.sp
+.BI "double " rng ".ltriangular(double " lower ", double " upper ", double " mode ");"
+.sp
+.BI "double " rng ".empirical(int " n_probs ", double* " values ", double* " probs ");"
+.SH DESCRIPTION
+.BI "double " rng ".lempirical(int " n_probs ", double* " values ", double* " probs ");"
+.SH DESCRIPTION
+These functions generate pseudo-random numbers in various
+distributions using the Mersenne Twist algorithm described in
+.BR mtwist (3).
+.PP
+Depending on the compiler and architecture, it may be necessary to
+.B #define
+either or both of
+.B MT_NO_INLINE
+or
+.B MT_NO_LONGLONG
+before including the
+.B randistrs.h
+header file;
+see
+.BR mtwist (3)
+for more information.
+.PP
+The C interface provides four flavors of each function:
+.BI rds_ xxx\fR,\fP
+.BI rds_l xxx\fR,\fP
+.BI rd_ xxx\fR,\fP
+and
+.BI rd_l xxx\fR.\fP
+The "\fBrds\fP" versions
+accept an explicit Mersenne Twist state vector, as
+described in
+.BR mtwist (3).
+The "\fBrd\fP" versions use the default global state vector;
+in general these functions should be avoided except for unimportant
+applications.
+The versions with no "\fBl\fP" after the underscore use the 32-bit
+version of the PRNG, while the "\fBl\fP" versions generate more bits
+(usually 53) to increase the accuracy of the generated distribution at
+the expense of speed.
+.PP
+In the C++ interface, the
+.B mt_distribution
+class is derived from
+.B mt_prng
+(see
+.BR mtwist (3)),
+and provides all the functionality of that class as well as the
+extended functions for generating specific distributions.
+.PP
+With the exception of the
+.B *iuniform
+functions, all functions return a double-precision result.
+The range of the result depends on the distribution and the
+parameters.
+However, in all cases the precision of the result of non-"\fBl\fP"
+functions is limited to 32
+bits, or about 1 part in 4 billion.
+.PP
+The
+.B *iuniform
+functions generate integers selected from a uniform distribution in
+the range
+.RI ( lower ,
+.IR upper ].
+If the total range given to the non-"\fBl\fP" functions is less than
+429497, a fast but slightly
+inaccurate method is used; the bias in this case will never exceed
+.01%.
+If the range exceeds that value, a slightly slower but precise method
+is used.
+.PP
+The
+.B *liuniform
+functions also generate uniformly distributed integers, but they will
+support a range greater than 4294967295.
+The
+.B *liuniform
+functions should never be used unless a large range is required.
+.PP
+The
+.B *uniform
+functions generate double-precision numbers selected from a uniform
+distribution in the range
+.RI ( lower ,
+.IR upper ].
+This function should
+.I not
+be used to generate uniformly distributed random integers.
+Use the
+.I *iuniform
+family instead.
+.PP
+The
+.B *exponential
+functions generate an exponential distribution with the given mean.
+The
+.B *erlang
+functions generate a
+.IR p -Erlang
+distribution with the given mean.
+The
+.B *weibull
+functions generate a Weibull function with the given shape and scale
+parameters.
+.PP
+The
+.B *normal
+functions generate a normal (Gaussian) distribution with the given
+mean and a standard deviation equal to
+.IR sigma .
+The
+.B *lognormal
+functions generate a lognormal distribution with the given shape and
+scale parameters.
+.PP
+The
+.B *triangular
+functions generate a triangular distribution in the range 
+.RI ( lower ,
+.IR upper ]
+and with the given mode.
+.PP
+Finally, the
+.B *empirical
+functions generate empirically determined distributions.
+The caller must supply an array of
+.I n_probs
+probabilities in
+.I probs
+and an array of
+.IR n_probs +1
+.IR values .
+The result will be
+.IR values [0]
+with probability
+.IR probs [0],
+.IR values [1]
+with probability
+.IR probs [1],
+and so forth.
+The extra value,
+.IR values [ n_probs ],
+will appear with a probability equal to 1 minus the sum of the
+preceding probabilities.
+There is little point in using the "\fBl\fP" versions of the
+.B *empirical
+functions unless you have strong evidence to the contrary.
+.SH NOTES
+.PP
+It would be helpful if the package supported even more distributions.
+.PP
+The
+.B *iuniform
+functions keep internal state in an attempt to speed up their
+performance when the range is large.
+This internal state makes them non-reentrant.
+.PP
+When the range is small,
+.B *iuniform
+functions exhibit a very slight bias in favor of some values.
+This bias isn't significant for any application less demanding than
+gambling.
+To eliminate the bias, compile
+.B randistrs.c
+with
+.B RD_MAX_BIAS
+set to zero.
+.PP
+The state-saving optimization in the
+.B *iuniform
+functions doesn't help when they are called with varying ranges, even
+if a different state vector is used for each range.
+.SH "SEE ALSO"
+.BR mtwist (3)
+.PP
+Any good statistics or simulation textbook for descriptions of the
+distributions.

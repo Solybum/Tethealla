@@ -76,7 +76,7 @@ void UpdateDataFile ( const char* filename, unsigned count, void* data, unsigned
 	FILE* fp;
 	unsigned fs;
 
-	fp = fopen (filename, "r+b");
+    fopen_s(&fp, filename, "r+b");
 	if (fp)
 	{
 		fseek (fp, 0, SEEK_END);
@@ -92,7 +92,7 @@ void UpdateDataFile ( const char* filename, unsigned count, void* data, unsigned
 	}
 	else
 	{
-		fp = fopen (filename, "wb");
+        fopen_s(&fp, filename, "wb");
 		if (fp)
 		{
 			fwrite (data, 1, record_size, fp); // Has to be the first record...
@@ -109,7 +109,7 @@ void LoadDataFile ( const char* filename, unsigned* count, void** data, unsigned
 	unsigned ch;
 
 	printf ("Loading \"%s\" ... ", filename);
-	fp = fopen (filename, "rb");
+    fopen_s(&fp, filename, "rb");
 	if (fp)
 	{
 		fseek (fp, 0, SEEK_END);
@@ -173,7 +173,8 @@ main( int argc, char * argv[] )
 
 	FILE* fp;
 
-	if ( ( fp = fopen ("tethealla.ini", "r" ) ) == NULL )
+    fopen_s(&fp, "tethealla.ini", "r");
+	if (fp== NULL )
 	{
 		printf ("The configuration file tethealla.ini appears to be missing.\n");
 		return 1;
@@ -185,7 +186,7 @@ main( int argc, char * argv[] )
 			{
 				if (config_index < 0x04)
 				{
-					ch = strlen (&config_data[0]);
+					ch = (unsigned char)strlen (&config_data[0]);
 					if (config_data[ch-1] == 0x0A)
 						config_data[ch--]  = 0x00;
 					config_data[ch] = 0;
@@ -225,9 +226,9 @@ main( int argc, char * argv[] )
 		printf ("tethealla.ini seems to be corrupted.\n");
 		return 1;
 	}
-	
+
 #ifndef NO_SQL
-	if ( (myData = mysql_init((MYSQL*) 0)) && 
+	if ( (myData = mysql_init((MYSQL*) 0)) &&
 		mysql_real_connect( myData, &mySQL_Host[0], &mySQL_Username[0], &mySQL_Password[0], NULL, mySQL_Port,
 		NULL, 0 ) )
 	{
@@ -256,7 +257,7 @@ main( int argc, char * argv[] )
 	while (!pw_ok)
 	{
 		printf ("New account's username: ");
-		scanf ("%s", inputstr );
+		scanf_s ("%254s", inputstr, _countof(inputstr) );
 		if (strlen(inputstr) < 17)
 		{
 #ifdef NO_SQL
@@ -272,7 +273,7 @@ main( int argc, char * argv[] )
 			if (!pw_ok)
 				printf ("There's already an account by that name on the server.\n");
 #else
-			sprintf (&myQuery[0], "SELECT * from account_data WHERE username='%s'", inputstr );
+			sprintf_s (myQuery, _countof(myQuery), "SELECT * from account_data WHERE username='%s'", inputstr );
 			// Check to see if that account already exists.
 			//printf ("Executing MySQL query: %s\n", myQuery );
 			if ( ! mysql_query ( myData, &myQuery[0] ) )
@@ -310,12 +311,12 @@ main( int argc, char * argv[] )
 	while (!pw_ok)
 	{
 		printf ("New account's password: ");
-		scanf ("%s", inputstr );
+        scanf_s("%254s", inputstr, _countof(inputstr));
 		if ( ( strlen (inputstr ) < 17 ) || ( strlen (inputstr) < 8 ) )
 		{
 			memcpy (&password[0], &inputstr[0], 17 );
 			printf ("Verify password: ");
-			scanf ("%s", inputstr );
+            scanf_s("%254s", inputstr, _countof(inputstr));
 			memcpy (&password_check[0], &inputstr[0], 17 );
 			pw_same = 1;
 			for (ch=0;ch<16;ch++)
@@ -335,7 +336,7 @@ main( int argc, char * argv[] )
 	while (!pw_ok)
 	{
 		printf ("New account's e-mail address: ");
-		scanf ("%s", inputstr );
+        scanf_s("%254s", inputstr, _countof(inputstr));
 		memcpy (&email[0], &inputstr[0], strlen (inputstr)+1 );
 		// Check to see if the e-mail address has already been registered to an account.
 #ifdef NO_SQL
@@ -356,7 +357,7 @@ main( int argc, char * argv[] )
 			else
 				num_rows = 0;
 #else
-		sprintf (&myQuery[0], "SELECT * from account_data WHERE email='%s'", email );
+		sprintf_s (myQuery, _countof(myQuery), "SELECT * from account_data WHERE email='%s'", email );
 		//printf ("Executing MySQL query: %s\n", myQuery );
 		if ( ! mysql_query ( myData, &myQuery[0] ) )
 		{
@@ -375,7 +376,7 @@ main( int argc, char * argv[] )
 		if (!num_rows)
 		{
 			printf ("Verify e-mail address: ");
-			scanf ("%s", inputstr );
+            scanf_s("%254s", inputstr, _countof(inputstr));
 			memcpy (&email_check[0], &inputstr[0], strlen (inputstr)+1 );
 			pw_same = 1;
 			for (ch=0;ch<strlen(email);ch++)
@@ -393,7 +394,7 @@ main( int argc, char * argv[] )
 	num_rows = num_accounts;
 #else
 	// Check to see if any accounts already registered in the database at all.
-	sprintf (&myQuery[0], "SELECT * from account_data" );
+    sprintf_s(myQuery, _countof(myQuery), "SELECT * from account_data" );
 	//printf ("Executing MySQL query: %s\n", myQuery );
 	// Check to see if the e-mail address has already been registered to an account.
 	if ( ! mysql_query ( myData, &myQuery[0] ) )
@@ -410,14 +411,14 @@ main( int argc, char * argv[] )
 	}
 #endif
 	reg_seconds = (unsigned) regtime / 3600L;
-	ch = strlen (&password[0]);
-	_itoa (reg_seconds, &config_data[0], 10 );
+	ch = (unsigned char)strlen (&password[0]);
+    _itoa_s (reg_seconds, config_data, _countof(config_data), 10);
 	//Throw some salt in the game ;)
-	sprintf (&password[ch], "_%s_salt", &config_data[0] );
+	sprintf_s (password, _countof(password), "_%s_salt", &config_data[0] );
 	//printf ("New password = %s\n", password );
 	MDString (&password[0], &MDBuffer[0] );
 	for (ch=0;ch<16;ch++)
-		sprintf (&md5password[ch*2], "%02x", (unsigned char) MDBuffer[ch]);
+		sprintf_s (&md5password[ch*2], _countof(md5password) - (ch * 2), "%02x", (unsigned char) MDBuffer[ch]);
 	md5password[32] = 0;
 	if (!num_rows)
 	{
@@ -436,7 +437,7 @@ main( int argc, char * argv[] )
 		account_data[num_accounts]->teamid = -1;
 		UpdateDataFile ( "account.dat", 0, account_data[num_accounts], sizeof ( L_ACCOUNT_DATA ), 1 );
 #else
-		sprintf (&myQuery[0], "INSERT into account_data (username,password,email,regtime,guildcard,isgm,isactive) VALUES ('%s','%s','%s','%u','%u','1','1')", username, md5password, email, reg_seconds, guildcard_number );
+		sprintf_s (myQuery, _countof(myQuery), "INSERT into account_data (username,password,email,regtime,guildcard,isgm,isactive) VALUES ('%s','%s','%s','%u','%u','1','1')", username, md5password, email, reg_seconds, guildcard_number );
 #endif
 	}
 	else
@@ -460,7 +461,7 @@ main( int argc, char * argv[] )
 		account_data[num_accounts]->teamid = -1;
 		UpdateDataFile ( "account.dat", num_accounts, account_data[num_accounts], sizeof ( L_ACCOUNT_DATA ), 1 );
 #else
-		sprintf (&myQuery[0], "INSERT into account_data (username,password,email,regtime,isactive) VALUES ('%s','%s','%s','%u','1')", username, md5password, email, reg_seconds );
+        sprintf_s(myQuery, _countof(myQuery), "INSERT into account_data (username,password,email,regtime,isactive) VALUES ('%s','%s','%s','%u','1')", username, md5password, email, reg_seconds );
 #endif
 	}
 	// Insert into table.

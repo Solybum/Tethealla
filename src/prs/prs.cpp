@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <memory.h>
 
 typedef unsigned long u32;
@@ -217,10 +218,10 @@ u32 prs_compress(void* source,void* dest,u32 size)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-u32 prs_decompress(void* source,void* dest) // 800F7CB0 through 800F7DE4 in mem 
+u32 prs_decompress(void* source,void* dest) // 800F7CB0 through 800F7DE4 in mem
 {
-    u32 r3,r5; // u32 r0,r6,r9; // 6 unnamed registers 
-    u32 bitpos = 9; // 4 named registers 
+    u32 r3,r5; // u32 r0,r6,r9; // 6 unnamed registers
+    u32 bitpos = 9; // 4 named registers
     u8* sourceptr = (u8*)source;
     u8* sourceptr_orig = (u8*)source;
     u8* destptr = (u8*)dest;
@@ -228,7 +229,7 @@ u32 prs_decompress(void* source,void* dest) // 800F7CB0 through 800F7DE4 in mem
     u8 currentbyte;
     int flag;
     int offset;
-    u32 x,t; // 2 placed variables 
+    u32 x,t; // 2 placed variables
 
     //printf("\n> decompressing\n");
     currentbyte = sourceptr[0];
@@ -316,15 +317,15 @@ u32 prs_decompress(void* source,void* dest) // 800F7CB0 through 800F7DE4 in mem
 
 u32 prs_decompress_size(void* source)
 {
-    u32 r3,r5; // u32 r0,r6,r9; // 6 unnamed registers 
-    u32 bitpos = 9; // 4 named registers 
+    u32 r3,r5; // u32 r0,r6,r9; // 6 unnamed registers
+    u32 bitpos = 9; // 4 named registers
     u8* sourceptr = (u8*)source;
     u8* destptr = 0;
     u8* destptr_orig = 0;
     u8 currentbyte,lastbyte;
     int flag;
     int offset;
-    u32 x,t; // 2 placed variables 
+    u32 x,t; // 2 placed variables
 
     //printf("> %08X -> %08X: begin\n",sourceptr,destptr);
     currentbyte = sourceptr[0];

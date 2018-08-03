@@ -8,8 +8,6 @@
 /*		07/22/2008  TC  First version...						*/
 /****************************************************************/
 
-//#define NO_SQL
-
 #include	<windows.h>
 #include	<stdio.h>
 #include	<string.h>

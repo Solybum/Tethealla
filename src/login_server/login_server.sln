@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "login_server", "login_serve
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_NoSQL|Win32 = Debug_NoSQL|Win32
 		Debug|Win32 = Debug|Win32
+		Release_NoSQL|Win32 = Release_NoSQL|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Debug_NoSQL|Win32.ActiveCfg = Debug_NoSQL|Win32
+		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Debug_NoSQL|Win32.Build.0 = Debug_NoSQL|Win32
 		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Debug|Win32.Build.0 = Debug|Win32
+		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Release_NoSQL|Win32.ActiveCfg = Release_NoSQL|Win32
+		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Release_NoSQL|Win32.Build.0 = Release_NoSQL|Win32
 		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Release|Win32.ActiveCfg = Release|Win32
 		{4BD47319-9CFD-425B-A18C-FFFA7CA1DCFF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection

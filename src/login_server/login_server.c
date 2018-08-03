@@ -21,7 +21,6 @@
 // - Limit to 40 guild cards for now.
 //
 
-#define NO_SQL
 #define NO_CONNECT_TEST
 
 #include	<windows.h>

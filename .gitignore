@@ -14,8 +14,10 @@
 
 # Build results
 [Dd]ebug/
+[Dd]ebug_NoSQL/
 [Dd]ebugPublic/
 [Rr]elease/
+[Rr]elease_NoSQL/
 [Rr]eleases/
 x64/
 x86/

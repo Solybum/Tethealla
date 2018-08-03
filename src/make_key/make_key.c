@@ -114,8 +114,8 @@ int main()
 	int config_index = 0;
 	char config_data[255];
 
-
-	if ( ( fp = fopen ("tethealla.ini", "r" ) ) == NULL )
+    fopen_s(&fp, "tethealla.ini", "r");
+	if (fp == NULL)
 	{
 		printf ("The configuration file tethealla.ini appears to be missing.\n");
 		return 1;
@@ -174,7 +174,7 @@ int main()
 
 #else
 
-	if ( (myData = mysql_init((MYSQL*) 0)) && 
+	if ( (myData = mysql_init((MYSQL*) 0)) &&
 		mysql_real_connect( myData, &mySQL_Host[0], &mySQL_Username[0], &mySQL_Password[0], NULL, mySQL_Port,
 		NULL, 0 ) )
 	{
@@ -184,7 +184,7 @@ int main()
 			return 2 ;
 		}
 	}
-	else 
+	else
 	{
 		printf( "Can't connect to the mysql server (%s) on port %d !\nmysql_error = %s\n",
 			mySQL_Host, mySQL_Port, mysql_error(myData) ) ;
@@ -220,10 +220,10 @@ int main()
 	printf ("Key generated and successfully added to database! ID: %u\n", ship_index);
 
 #else
-	
+
 	mysql_real_escape_string ( myData, &ship_string[0], &ship_key[0], 0x80 );
 
-	sprintf (&myQuery[0], "INSERT into ship_data (rc4key) VALUES ('%s')", ship_string );
+	sprintf_s(myQuery, _countof(myQuery), "INSERT into ship_data (rc4key) VALUES ('%s')", ship_string);
 	if ( ! mysql_query ( myData, &myQuery[0] ) )
 	{
 		ship_index = (unsigned) mysql_insert_id ( myData );
@@ -235,18 +235,24 @@ int main()
 		return 1;
 	}
 
-	mysql_close( myData ) ;	
+	mysql_close( myData ) ;
 
 #endif
 
 	printf ("Writing ship_key.bin... ");
-	fp = fopen ("ship_key.bin", "wb");
-	fwrite (&ship_index, 1, 4, fp);
-	fwrite (&ship_key, 1, 128, fp);
-	fclose (fp);
-	printf ("OK!!!\n");
+    fopen_s(&fp, "ship_key.bin", "wb");
+    if (fp == NULL)
+    {
+        printf("Could not open ship_key.bin for writing");
+    }
+    else
+    {
+        fwrite(&ship_index, 1, 4, fp);
+        fwrite(&ship_key, 1, 128, fp);
+        fclose(fp);
+        printf("OK!!!\n");
+    }
 	printf ("Hit [ENTER]");
-	gets (&ship_key[0]);
-	exit (1);
+    getchar();
 	return 0;
 }

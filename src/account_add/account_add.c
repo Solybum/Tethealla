@@ -148,13 +148,13 @@ main( int argc, char * argv[] )
 	unsigned char ch;
 	time_t regtime;
 	unsigned reg_seconds;
-	unsigned char max_fields;
 
 #ifndef NO_SQL
 	MYSQL * myData;
 	char myQuery[255] = {0};
 	MYSQL_ROW myRow ;
 	MYSQL_RES * myResult;
+    unsigned char max_fields;
 #endif
 	int num_rows, pw_ok, pw_same;
 	unsigned guildcard_number;

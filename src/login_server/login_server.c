@@ -83,8 +83,8 @@ const char *PSO_CLIENT_VER_STRING = "TethVer12510";
 #define CLASS_RAMARL 0x0B
 #define CLASS_MAX 0x0C
 
-struct timeval select_timeout = { 
-	0, 
+struct timeval select_timeout = {
+	0,
 	5000
 };
 
@@ -126,7 +126,7 @@ unsigned char Packet03[] = {
 	0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
 	0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28,
 	0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30
-}; 
+};
 
 const unsigned char Message03[] = { "Tethealla Gate v.047" };
 
@@ -141,7 +141,7 @@ const unsigned char Packet19[] = {
 /* Login message */
 
 const unsigned char Packet1A[] = {
-	0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x00, 0x45, 0x00 
+	0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x00, 0x45, 0x00
 };
 
 /* Ping pong */
@@ -189,8 +189,8 @@ const unsigned char PacketE8[] = {
 
 /* The "Top Broadcast" Packet */
 
-const unsigned char PacketEE[] = { 
-		0x00, 0x00, 0xEE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 
+const unsigned char PacketEE[] = {
+		0x00, 0x00, 0xEE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 unsigned char E2_Base[2808] = { 0 };
@@ -432,7 +432,7 @@ typedef struct st_banana {
 	unsigned char decryptbuf [TCP_BUFFER_SIZE];
 	unsigned char sndbuf [TCP_BUFFER_SIZE];
 	unsigned char encryptbuf [TCP_BUFFER_SIZE];
-	int snddata, 
+	int snddata,
 		sndwritten;
 	unsigned char packet [TCP_BUFFER_SIZE];
 	unsigned short packetdata;
@@ -487,7 +487,7 @@ typedef struct st_orange {
 	unsigned char packet [PACKET_BUFFER_SIZE];
 	unsigned long packetread;
 	unsigned long packetdata;
-	int snddata, 
+	int snddata,
 		sndwritten;
 	unsigned shipID;
 	int authed;
@@ -560,7 +560,7 @@ typedef struct st_guild {
 	unsigned short sectionid;
 	unsigned short pclass;
 	unsigned short comment[45];
-	int priority;	
+	int priority;
 } L_GUILD_DATA;
 
 
@@ -670,7 +670,7 @@ void WriteLog(char *fmt, ...)
 
 	GetLocalTime (&rawtime);
 	va_start (args, fmt);
-	strcpy (text + vsprintf( text,fmt,args), "\r\n"); 
+	strcpy (text + vsprintf( text,fmt,args), "\r\n");
 	va_end (args);
 
 	fp = fopen ( "login.log", "a");
@@ -679,11 +679,11 @@ void WriteLog(char *fmt, ...)
 		printf ("Unable to log to login.log\n");
 	}
 
-	fprintf (fp, "[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear, 
+	fprintf (fp, "[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear,
 		rawtime.wHour, rawtime.wMinute, text);
 	fclose (fp);
 
-	printf ("[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear, 
+	printf ("[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear,
 		rawtime.wHour, rawtime.wMinute, text);
 }
 
@@ -699,7 +699,7 @@ void display_packet ( unsigned char* buf, int len )
 		if (c3==16)
 		{
 			for (;c4<c;c4++)
-				if (buf[c4] >= 0x20) 
+				if (buf[c4] >= 0x20)
 					dp[c2++] = buf[c4];
 				else
 					dp[c2++] = 0x2E;
@@ -730,7 +730,7 @@ void display_packet ( unsigned char* buf, int len )
 	}
 
 	for (;c4<c;c4++)
-		if (buf[c4] >= 0x20) 
+		if (buf[c4] >= 0x20)
 			dp[c2++] = buf[c4];
 		else
 			dp[c2++] = 0x2E;
@@ -785,7 +785,7 @@ void convertIPString (char* IPData, unsigned IPLen, int fromConfig )
 						printf ("tethealla.ini is corrupted. (Failed to read IP information from file!)\n"); else
 						printf ("Failed to determine IP address.\n");
 					printf ("Hit [ENTER]");
-					gets (&dp[0]);
+                    getchar();
 					exit (1);
 				}
 			}
@@ -798,7 +798,7 @@ void convertIPString (char* IPData, unsigned IPLen, int fromConfig )
 						printf ("tethealla.ini is corrupted. (Failed to read IP information from file!)\n"); else
 						printf ("Failed to determine IP address.\n");
 					printf ("Hit [ENTER]");
-					gets (&dp[0]);
+                    getchar();
 					exit (1);
 				}
 				break;
@@ -839,7 +839,7 @@ void construct0xEB()
 	{
 		printf ("Missing e8send.txt\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 	PacketEB01[0x02] = 0xEB;
@@ -858,7 +858,7 @@ void construct0xEB()
 		{
 			printf ("Could not open %s!\n", &EBFiles[ch][0]);
 			printf ("Hit [ENTER]");
-			gets (&dp[0]);
+            getchar();
 			exit (1);
 		}
 		fseek (fpb, 0, SEEK_END);
@@ -908,7 +908,7 @@ void construct0xEB()
 		{
 			printf ("Too much patch data to send.\n");
 			printf ("Hit [ENTER]");
-			gets (&dp[0]);
+            getchar();
 			exit (1);
 		}
 	}
@@ -945,7 +945,7 @@ void load_config_file()
 	{
 		printf ("The configuration file tethealla.ini appears to be missing.\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 	else
@@ -999,7 +999,7 @@ void load_config_file()
 							if (!pn_host) {
 								printf ("Could not resolve www.pioneer2.net\n");
 								printf ("Hit [ENTER]");
-								gets (&dp[0]);
+                                getchar();
 								exit (1);
 							}
 
@@ -1008,7 +1008,7 @@ void load_config_file()
 							{
 								printf ("Unable to create TCP/IP streaming socket.");
 								printf ("Hit [ENTER]");
-								gets (&dp[0]);
+                                getchar();
 								exit(1);
 							}
 
@@ -1026,7 +1026,7 @@ void load_config_file()
 							{
 								printf ("\nCannot connect to www.pioneer2.net!");
 								printf ("Hit [ENTER]");
-								gets (&dp[0]);
+                                getchar();
 								exit(1);
 							}
 
@@ -1089,7 +1089,7 @@ void load_config_file()
 						override_on = 1;
 						*(unsigned *) &overrideIP[0] = *(unsigned *) &serverIP[0];
 						serverIP[0] = 0;
-						convertIPString (&config_data[0], ch+1, 1);							
+						convertIPString (&config_data[0], ch+1, 1);
 					}
 					break;
 				case 0x0B:
@@ -1160,7 +1160,7 @@ void load_config_file()
 	{
 		printf ("tethealla.ini seems to be corrupted.\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 }
@@ -1588,12 +1588,12 @@ void AckCharacter_Creation(unsigned char slotnum, BANANA* client)
 	MINICHAR* clientchar;
 	CHARDATA* E7Base;
 	CHARDATA* NewE7;
-	unsigned short maxFace, maxHair, maxHairColorRed, maxHairColorBlue, maxHairColorGreen, 
+	unsigned short maxFace, maxHair, maxHairColorRed, maxHairColorBlue, maxHairColorGreen,
 		maxCostume, maxSkin, maxHead;
 	unsigned ch;
 
 	packetSize = *(unsigned short*) &client->decryptbuf[0];
-	if ( ( client->guildcard ) && ( slotnum < 4 ) && ( client->sendingchars == 0 ) && 
+	if ( ( client->guildcard ) && ( slotnum < 4 ) && ( client->sendingchars == 0 ) &&
 		( packetSize == 0x88 ) && ( client->decryptbuf[0x45] < CLASS_MAX ) )
 	{
 		clientchar = (MINICHAR*) &client->decryptbuf[0x00];
@@ -1847,7 +1847,7 @@ void AckCharacter_Creation(unsigned char slotnum, BANANA* client)
 			memcpy (&NewE7->guildCard2, &E7Base->guildCard2, 2108);
 
 #ifndef NO_SQL
-			
+
 			mysql_real_escape_string ( myData, &E7chardata[0], (unsigned char*) NewE7, sizeof (CHARDATA) );
 
 #endif
@@ -2010,7 +2010,7 @@ void SendE4_E5(unsigned char slotnum, unsigned char selecting, BANANA* client)
 {
 	int char_exists = 0;
 	MINICHAR* mc;
-	
+
 	if ((client->guildcard) && (slotnum < 0x04))
 	{
 #ifdef NO_SQL
@@ -2216,7 +2216,7 @@ void SendEB (unsigned char subCommand, unsigned char EBOffset, BANANA* client)
 
 void SendDC (int sendChecksum, unsigned char PacketNum, BANANA* client)
 {
-	unsigned gc_ofs = 0, 
+	unsigned gc_ofs = 0,
 		total_guilds = 0;
 	unsigned friendid;
 	unsigned short sectionid, _class;
@@ -2580,7 +2580,7 @@ void FixItem (ITEM* i)
 			if ( i->data[ch3] & 128 )
 			{
 				srank = 1; // S-Rank
-				break; 
+				break;
 			}
 
 			if ( ( i->data[ch3] ) &&
@@ -2591,7 +2591,7 @@ void FixItem (ITEM* i)
 				if ( ( percent > 100 ) || ( percent < -100 ) )
 					percent = 0;
 				// Save percent
-				percent_table[i->data[ch3]] = 
+				percent_table[i->data[ch3]] =
 					percent;
 			}
 		}
@@ -2835,8 +2835,8 @@ void ShipProcessPacket (ORANGE* ship)
 											closesocket ( tempfd );
 #endif
 
-											printf ("Ship %s (%u.%u.%u.%u:%u) has been successfully registered.\nPlayer count: %u\nShip key index: %u\n", ship->name, 
-												ship->shipAddr[0], ship->shipAddr[1], ship->shipAddr[2], ship->shipAddr[3], ship->shipPort, 
+											printf ("Ship %s (%u.%u.%u.%u:%u) has been successfully registered.\nPlayer count: %u\nShip key index: %u\n", ship->name,
+												ship->shipAddr[0], ship->shipAddr[1], ship->shipAddr[2], ship->shipAddr[3], ship->shipPort,
 												ship->playerCount, ship->key_index );
 
 											ship->authed = 1;
@@ -2922,7 +2922,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 				for (ds=0;ds<num_characters;ds++)
 				{
-					if ((character_data[ds]->guildcard == guildcard) && 
+					if ((character_data[ds]->guildcard == guildcard) &&
 						(character_data[ds]->slot == slotnum))
 					{
 						ds_found = ds;
@@ -3138,7 +3138,7 @@ void ShipProcessPacket (ORANGE* ship)
 				unsigned guildcard, ch2;
 				unsigned short slotnum;
 				CHARDATA* character;
-				unsigned short maxFace, maxHair, maxHairColorRed, maxHairColorBlue, maxHairColorGreen, 
+				unsigned short maxFace, maxHair, maxHairColorRed, maxHairColorBlue, maxHairColorGreen,
 					maxCostume, maxSkin, maxHead;
 
 				guildcard = *(unsigned*) &ship->decryptbuf[0x06];
@@ -3448,7 +3448,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 					gccomment[44] = 0x0000;
 
-					sprintf (&myQuery[0], "INSERT INTO guild_data (accountid,friendid,friendname,friendtext,sectionid,class,comment,priority) VALUES ('%u','%u','%s','%s','%u','%u','%s','%u')", 
+					sprintf (&myQuery[0], "INSERT INTO guild_data (accountid,friendid,friendname,friendtext,sectionid,class,comment,priority) VALUES ('%u','%u','%s','%s','%u','%u','%s','%u')",
 						clientGcn, friendGcn, (char*) &gcname[0], (char*) &gctext[0], friendSecID, friendClass, (char*) &gccomment[0], gc_priority );
 
 					if ( mysql_query ( myData, &myQuery[0] ) )
@@ -3818,7 +3818,7 @@ void ShipProcessPacket (ORANGE* ship)
 						if ((tship->shipSockfd >= 0) && (tship->authed == 1))
 							compressShipPacket ( tship, &ship->decryptbuf[0x04], 0x45E );
 					}
-				}				
+				}
 			}
 			break;
 		case 0x04:
@@ -4383,7 +4383,7 @@ void ShipProcessPacket (ORANGE* ship)
 						fail_to_auth = 1;
 
 					security_client_thirtytwo = *(unsigned *) &ship->decryptbuf[0x0A];
-					
+
 					if (security_client_thirtytwo != security_thirtytwo_check)
 						fail_to_auth = 1;
 
@@ -4522,8 +4522,8 @@ void CharacterProcessPacket (BANANA* client)
 				if ((tship->shipSockfd >= 0) && (tship->authed == 1)  &&
 					(tship->shipID == selected))
 				{
-						Send19 (tship->shipAddr[0], tship->shipAddr[1], 
-								tship->shipAddr[2], tship->shipAddr[3], 
+						Send19 (tship->shipAddr[0], tship->shipAddr[1],
+								tship->shipAddr[2], tship->shipAddr[3],
 								tship->shipPort, client);
 					break;
 				}
@@ -4604,7 +4604,7 @@ void CharacterProcessPacket (BANANA* client)
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0x94];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
-					
+
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0x9C];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
@@ -4612,7 +4612,7 @@ void CharacterProcessPacket (BANANA* client)
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0xA4];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
-					
+
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0xAC];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
@@ -4730,7 +4730,7 @@ void CharacterProcessPacket (BANANA* client)
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0x94];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
-					
+
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0x9C];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
@@ -4738,11 +4738,11 @@ void CharacterProcessPacket (BANANA* client)
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0xA4];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
-					
+
 						security_client_sixtyfour = *(long long*) &client->decryptbuf[0xAC];
 						if (security_client_sixtyfour == security_sixtyfour_check)
 							found_match = 1;
-					
+
 						if (found_match == 0)
 						{
 							debug ("Couldn't find 64-bit information.");
@@ -5117,11 +5117,11 @@ void LoginProcessPacket (BANANA* client)
 
 				memcpy (&client->encryptbuf[0], &PacketE6[0], sizeof (PacketE6));
 				*(unsigned *) &client->encryptbuf[0x10] = gcn;
-				
+
 				// Store some security shit
 				for (ch=0;ch<8;ch++)
 					client->encryptbuf[0x38+ch] = (unsigned char) rand() % 255;
-				
+
 				security_sixtyfour_check = *(long long*) &client->encryptbuf[0x38];
 
 				// Nom, nom, nom.
@@ -5223,7 +5223,7 @@ void LoadQuestAllow ()
 	{
 		printf ("questitem.txt is missing.\n");
 		printf ("Press [ENTER] to quit...");
-		gets(&dp[0]);
+        getchar();
 		exit (1);
 	}
 	else
@@ -5254,7 +5254,7 @@ void LoadQuestAllow ()
 
 
 void LoadDropData()
-{	
+{
 	unsigned ch,ch2,ch3,d;
 	unsigned char* rt_table;
 	char id_file[256];
@@ -5312,7 +5312,7 @@ void LoadDropData()
 					{
 						printf ("Drop table not found \"%s\"", id_file[0] );
 						printf ("Hit [ENTER] to quit...");
-						gets   (&dp[0]);
+                        getchar();
 						exit   (1);
 					}
 					look_rate = 1;
@@ -5331,7 +5331,7 @@ void LoadDropData()
 								{
 									printf ("Corrupted drop table \"%s\"", id_file[0] );
 									printf ("Hit [ENTER] to quit...");
-									gets   (&dp[0]);
+                                    getchar();
 									exit   (1);
 								}
 								_strupr ( &dp[0] );
@@ -5353,7 +5353,7 @@ void LoadDropData()
 					{
 						printf ("Drop table not found \"%s\"", id_file[0] );
 						printf ("Hit [ENTER] to quit...");
-						gets   (&dp[0]);
+                        getchar();
 						exit   (1);
 					}
 					look_rate = 0;
@@ -5376,7 +5376,7 @@ void LoadDropData()
 								{
 									printf ("Corrupted drop table \"%s\"", id_file[0] );
 									printf ("Hit [ENTER] to quit...");
-									gets   (&dp[0]);
+                                    getchar();
 									exit   (1);
 								}
 								_strupr ( &dp[0] );
@@ -5468,7 +5468,7 @@ void LoadDataFile ( const char* filename, unsigned* count, void** data, unsigned
 			if (!data[ch])
 			{
 				printf ("Out of memory!\nHit [ENTER]");
-				gets (&dp[0]);
+                getchar();
 				exit (1);
 			}
 			fread (data[ch], 1, record_size, fp);
@@ -5488,7 +5488,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam 
 		switch (lParam)
 		{
 		case WM_LBUTTONDBLCLK:
-			switch (wParam) 
+			switch (wParam)
 			{
 			case 100:
 				if (program_hidden)
@@ -5605,7 +5605,7 @@ main( int argc, char * argv[] )
 	{
 		printf ("Can't proceed without plyleveltbl.bin!\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 	fread ( &startingStats[0], 1, 12*14, fp );
@@ -5617,7 +5617,7 @@ main( int argc, char * argv[] )
 	{
 		printf ("Can't proceed without e2base.bin!\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 	fread ( &E2_Base[0], 1, 2808, fp );
@@ -5629,7 +5629,7 @@ main( int argc, char * argv[] )
 	{
 		printf ("Can't proceed without e7base.bin!\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 	fread ( &E7_Base, 1, sizeof(CHARDATA), fp );
@@ -5670,7 +5670,7 @@ main( int argc, char * argv[] )
 		{
 			printf ("Out of memory!\n");
 			printf ("Hit [ENTER]");
-			gets (&dp[0]);
+            getchar();
 			exit (1);
 		}
 		initialize_connection (connections[ch]);
@@ -5685,7 +5685,7 @@ main( int argc, char * argv[] )
 		{
 			printf ("Out of memory!\n");
 			printf ("Hit [ENTER]");
-			gets (&dp[0]);
+            getchar();
 			exit (1);
 		}
 		initialize_ship (ships[ch]);
@@ -5698,7 +5698,7 @@ main( int argc, char * argv[] )
 #ifndef NO_SQL
 	printf ("Connecting up to the MySQL database ...");
 
-	if ( (myData = mysql_init((MYSQL*) 0)) && 
+	if ( (myData = mysql_init((MYSQL*) 0)) &&
 		mysql_real_connect( myData, &mySQL_Host[0], &mySQL_Username[0], &mySQL_Password[0], NULL, mySQL_Port,
 		NULL, 0 ) )
 	{
@@ -5736,7 +5736,7 @@ main( int argc, char * argv[] )
 	for (ds=0;ds<num_shipkeys;ds++)
 	{
 		if (ship_data[ds]->idx >= max_ship_keys)
-			max_ship_keys = ship_data[ds]->idx;					
+			max_ship_keys = ship_data[ds]->idx;
 	}
 
 #else
@@ -5776,7 +5776,7 @@ main( int argc, char * argv[] )
 	{
 		printf ("Can't proceed without default.flag!\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 	fread ( &DefaultTeamFlag[0], 1, 2048, fp );
@@ -5810,7 +5810,7 @@ main( int argc, char * argv[] )
 	character_in.s_addr = INADDR_ANY;
 #else
 	if (override_on)
-		*(unsigned *) &character_in.s_addr = *(unsigned*) &overrideIP[0]; 
+		*(unsigned *) &character_in.s_addr = *(unsigned*) &overrideIP[0];
 	else
 		*(unsigned *) &character_in.s_addr = *(unsigned *) &serverIP[0];
 #endif
@@ -5838,7 +5838,7 @@ main( int argc, char * argv[] )
 	{
 		printf ("Failed to open ports for connections.\n");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit (1);
 	}
 
@@ -5858,8 +5858,8 @@ main( int argc, char * argv[] )
 		exit (1);
 	}
 
-	hwndWindow = CreateWindow ("sodaboy","hidden window", WS_MINIMIZE, 1, 1, 1, 1, 
-		NULL, 
+	hwndWindow = CreateWindow ("sodaboy","hidden window", WS_MINIMIZE, 1, 1, 1, 1,
+		NULL,
 		NULL,
 		hinst,
 		NULL );
@@ -5950,7 +5950,7 @@ main( int argc, char * argv[] )
 			connectNum = serverConnectionList[ch];
 			workConnect = connections[connectNum];
 
-			if (workConnect->plySockfd >= 0) 
+			if (workConnect->plySockfd >= 0)
 			{
 				if (workConnect->packetdata)
 				{
@@ -5986,7 +5986,7 @@ main( int argc, char * argv[] )
 				}
 
 				/*
-					if (((unsigned) servertime - workConnect->connected >= 300) || 
+					if (((unsigned) servertime - workConnect->connected >= 300) ||
 						(workConnect->connected > (unsigned) servertime))
 					{
 						Send1A ("You have been idle for too long.  Disconnecting...", workConnect);
@@ -6011,7 +6011,7 @@ main( int argc, char * argv[] )
 			shipNum = serverShipList[ch];
 			workShip = ships[shipNum];
 
-			if (workShip->shipSockfd >= 0) 
+			if (workShip->shipSockfd >= 0)
 			{
 				// Send a ping request to the ship when 30 seconds passes...
 				if (((unsigned) servertime - workShip->last_ping >= 30) && (workShip->sent_ping == 0))
@@ -6020,7 +6020,7 @@ main( int argc, char * argv[] )
 					ShipSend11 (workShip);
 				}
 
-				// If it's been over a minute since we've heard from a ship, terminate 
+				// If it's been over a minute since we've heard from a ship, terminate
 				// the connection with it.
 
 				if ((unsigned) servertime - workShip->last_ping > 60)
@@ -6070,7 +6070,7 @@ main( int argc, char * argv[] )
 
 		/* Check sockets for activity. */
 
-		if ( select ( nfds + 1, &ReadFDs, &WriteFDs, &ExceptFDs, &select_timeout ) > 0 ) 
+		if ( select ( nfds + 1, &ReadFDs, &WriteFDs, &ExceptFDs, &select_timeout ) > 0 )
 		{
 			if (FD_ISSET (login_sockfd, &ReadFDs))
 			{
@@ -6237,7 +6237,7 @@ main( int argc, char * argv[] )
 							printf ("Could not send data to client...\n");
 							printf ("Socket Error %u.\n", wserror );
 							*/
-							initialize_connection (workConnect);							
+							initialize_connection (workConnect);
 						}
 						else
 						{
@@ -6339,7 +6339,7 @@ main( int argc, char * argv[] )
 							printf ("Socket Error %u.\n", wserror );
 							*/
 							printf ("Lost connection with the %s ship...\n", workShip->name );
-							initialize_ship (workShip);							
+							initialize_ship (workShip);
 						}
 						else
 							workShip->sndwritten += bytes_sent;
@@ -6379,7 +6379,7 @@ void send_to_server(int sock, char* packet)
 	{
 	  printf ("send_to_server(): failure");
 	  printf ("Hit [ENTER]");
-	  gets (&dp[0]);
+      getchar();
 	  exit(1);
 	}
 
@@ -6393,7 +6393,7 @@ int receive_from_server(int sock, char* packet)
 	{
 	  printf ("receive_from_server(): failure");
 	  printf ("Hit [ENTER]");
-	  gets (&dp[0]);
+      getchar();
 	  exit(1);
 	}
   packet[pktlen] = 0;
@@ -6406,7 +6406,7 @@ void tcp_listen (int sockfd)
 	{
 		debug_perror ("Could not listen for connection");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit(1);
 	}
 }
@@ -6466,9 +6466,9 @@ int tcp_sock_open(struct in_addr ip, int port)
 	if( fd < 0 ){
 		debug_perror("Could not create socket");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit(1);
-	} 
+	}
 
 	sa.sin_family = AF_INET;
 	memcpy((void *)&sa.sin_addr, (void *)&ip, sizeof(struct in_addr));
@@ -6482,7 +6482,7 @@ int tcp_sock_open(struct in_addr ip, int port)
 	if (bind(fd, (struct sockaddr *)&sa, sizeof(struct sockaddr)) < 0){
 		debug_perror("Could not bind to port");
 		printf ("Hit [ENTER]");
-		gets (&dp[0]);
+        getchar();
 		exit(1);
 	}
 
@@ -6491,7 +6491,7 @@ int tcp_sock_open(struct in_addr ip, int port)
 
 /*****************************************************************************
 * same as debug_perror but writes to debug output.
-* 
+*
 *****************************************************************************/
 void debug_perror( char * msg ) {
 	debug( "%s : %s\n" , msg , strerror(errno) );
@@ -6505,7 +6505,7 @@ void debug(char *fmt, ...)
 	char text[ MAX_MESG_LEN ];
 
 	va_start (args, fmt);
-	strcpy (text + vsprintf( text,fmt,args), "\r\n"); 
+	strcpy (text + vsprintf( text,fmt,args), "\r\n");
 	va_end (args);
 
 	fprintf( stderr, "%s", text);
@@ -6649,7 +6649,7 @@ void pso_crypt_table_init_bb(PSO_CRYPT *pcry, const unsigned char *salt)
 		dx ^= pcryp[ebx++];
 		pcryp[ebx++] = dx;
 	}
-	
+
 	/*
 
 	pcry->tbl[0] = 0x243F6A88;
@@ -6670,7 +6670,7 @@ void pso_crypt_table_init_bb(PSO_CRYPT *pcry, const unsigned char *salt)
 	pcry->tbl[15] = 0xB5470917;
 	pcry->tbl[16] = 0x9216D5D9;
 	pcry->tbl[17] = 0x8979FB1B;
-	
+
 	*/
 
 	memcpy(&pcry->tbl[18], &bbtable[18], 4096);

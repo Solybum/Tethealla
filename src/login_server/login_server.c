@@ -653,11 +653,6 @@ unsigned lastdump = 0;
 
 #endif
 
-#define MYWM_NOTIFYICON (WM_USER+2)
-int program_hidden = 1;
-HWND consoleHwnd;
-HWND backupHwnd;
-
 void WriteLog(char *fmt, ...)
 {
 #define MAX_GM_MESG_LEN 4096
@@ -5371,39 +5366,6 @@ void LoadDataFile ( const char* filename, unsigned* count, void** data, unsigned
 
 #endif
 
-
-LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
-{
-	if(message == MYWM_NOTIFYICON)
-	{
-		switch (lParam)
-		{
-		case WM_LBUTTONDBLCLK:
-			switch (wParam)
-			{
-			case 100:
-				if (program_hidden)
-				{
-					program_hidden = 0;
-					ShowWindow (consoleHwnd, SW_NORMAL);
-					SetForegroundWindow (consoleHwnd);
-					SetFocus(consoleHwnd);
-				}
-				else
-				{
-					program_hidden = 1;
-					ShowWindow (consoleHwnd, SW_HIDE);
-				}
-				return TRUE;
-				break;
-			}
-			break;
-		}
-	}
-	return DefWindowProc( hwnd, message, wParam, lParam );
-}
-
-
 /********************************************************
 **
 **		main  :-
@@ -5428,19 +5390,9 @@ main( int argc, char * argv[] )
 	//int wserror;
 	unsigned char MDBuffer[17] = {0};
 	unsigned connectNum, shipNum;
-	HINSTANCE hinst;
-    NOTIFYICONDATA nid = {0};
-	WNDCLASS wc = {0};
-	HWND hwndWindow;
-	MSG msg;
 	WSADATA winsock_data;
 
-	consoleHwnd = GetConsoleWindow();
-	hinst = GetModuleHandle(NULL);
-
-	dp[0] = 0;
-
-	memset (&dp[0], 0, sizeof (dp));
+	memset(dp, 0, sizeof(dp));
 
 	strcat_s(dp, _countof(dp), "Tethealla Login Server version ");
     strcat_s(dp, _countof(dp), SERVER_VERSION );
@@ -5735,52 +5687,6 @@ main( int argc, char * argv[] )
 
 	printf ("\nListening...\n");
 
-	wc.hbrBackground =(HBRUSH)GetStockObject(WHITE_BRUSH);
-	wc.hIcon = LoadIcon( hinst, IDI_APPLICATION );
-	wc.hCursor = LoadCursor( hinst, IDC_ARROW );
-	wc.hInstance = hinst;
-	wc.lpfnWndProc = WndProc;
-	wc.lpszClassName = "sodaboy";
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-
-	if (! RegisterClass( &wc ) )
-	{
-		printf ("RegisterClass failure.\n");
-		exit (1);
-	}
-
-	hwndWindow = CreateWindow ("sodaboy","hidden window", WS_MINIMIZE, 1, 1, 1, 1,
-		NULL,
-		NULL,
-		hinst,
-		NULL );
-
-	backupHwnd = hwndWindow;
-
-	if (!hwndWindow)
-	{
-		printf ("Failed to create window.");
-		exit (1);
-	}
-
-	ShowWindow ( hwndWindow, SW_HIDE );
-	UpdateWindow ( hwndWindow );
-	ShowWindow ( consoleHwnd, SW_HIDE );
-	UpdateWindow ( consoleHwnd );
-
-    nid.cbSize				= sizeof(nid);
-	nid.hWnd				= hwndWindow;
-	nid.uID					= 100;
-	nid.uCallbackMessage	= MYWM_NOTIFYICON;
-	nid.uFlags				= NIF_MESSAGE|NIF_ICON|NIF_TIP;
-    nid.hIcon				= LoadIcon(hinst, MAKEINTRESOURCE(IDI_ICON1));
-	nid.szTip[0] = 0;
-	strcat_s(&nid.szTip[0], _countof(nid.szTip), "Tethealla Login ");
-    strcat_s(&nid.szTip[0], _countof(nid.szTip), SERVER_VERSION);
-    strcat_s(&nid.szTip[0], _countof(nid.szTip), " - Double click to show/hide");
-    Shell_NotifyIcon(NIM_ADD, &nid);
-
-
 #ifdef NO_SQL
 
 	lastdump = (unsigned) time(NULL);
@@ -5794,23 +5700,6 @@ main( int argc, char * argv[] )
 		/* Ping pong?! */
 
 		servertime = time(NULL);
-
-		/* Process the system tray icon */
-
-		if ( backupHwnd != hwndWindow )
-		{
-			debug ("hwndWindow has been corrupted...");
-			display_packet ( (unsigned char*) &hwndWindow, sizeof (HWND));
-			hwndWindow = backupHwnd;
-			WriteLog ("hwndWindow corrupted %s", (char*) &dp[0] );
-		}
-
-		if ( PeekMessage( &msg, hwndWindow, 0, 0, 1 ) )
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
 
 #ifdef NO_SQL
 

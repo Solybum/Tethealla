@@ -669,9 +669,10 @@ void WriteLog(char *fmt, ...)
 	FILE *fp;
 
 	GetLocalTime (&rawtime);
-	va_start (args, fmt);
-	strcpy (text + vsprintf( text,fmt,args), "\r\n");
-	va_end (args);
+    va_start(args, fmt);
+    vsprintf_s(text, _countof(text), fmt, args);
+    strcat_s(text, _countof(text), "\r\n");
+    va_end(args);
 
     fopen_s(&fp, "login.log", "a");
 	if (!fp)
@@ -704,16 +705,16 @@ void display_packet ( unsigned char* buf, int len )
 				else
 					dp[c2++] = 0x2E;
 			c3 = 0;
-			sprintf (&dp[c2++], "\n" );
+            sprintf_s(&dp[c2++], _countof(dp) - c2, "\n");
 		}
 
 		if ((c == 0) || !(c % 16))
 		{
-			sprintf (&dp[c2], "(%04X) ", c);
+            sprintf_s(&dp[c2], _countof(dp) - c2, "(%04X) ", c);
 			c2 += 7;
 		}
 
-		sprintf (&dp[c2], "%02X ", buf[c]);
+        sprintf_s(&dp[c2], _countof(dp) - c2, "(%02X) ", buf[c]);
 		c2 += 3;
 		c3++;
 	}
@@ -723,7 +724,7 @@ void display_packet ( unsigned char* buf, int len )
 		c3 = len;
 		while (c3 % 16)
 		{
-			sprintf (&dp[c2], "   ");
+			sprintf_s(&dp[c2], _countof(dp) - c2, "   ");
 			c2 += 3;
 			c3++;
 		}
@@ -1401,8 +1402,9 @@ void SendB1 (BANANA* client)
 		GetSystemTime (&rawtime);
 		*(long long*) &client->encryptbuf[0] = *(long long*) &PacketB1[0];
 		memset (&client->encryptbuf[0x08], 0, 28);
-		sprintf (&client->encryptbuf[8], "%u:%02u:%02u: %02u:%02u:%02u.%03u", rawtime.wYear, rawtime.wMonth, rawtime.wDay,
+		sprintf_s(&client->encryptbuf[8], _countof(client->encryptbuf) - 8, "%u:%02u:%02u: %02u:%02u:%02u.%03u", rawtime.wYear, rawtime.wMonth, rawtime.wDay,
 			rawtime.wHour, rawtime.wMinute, rawtime.wSecond, rawtime.wMilliseconds );
+
 		cipher_ptr = &client->server_cipher;
 		encryptcopy (client, &client->encryptbuf[0], 0x24 );
 	}
@@ -1518,7 +1520,7 @@ void SendE2 (BANANA* client)
 
 #else
 
-		sprintf (&myQuery[0], "SELECT * from key_data WHERE guildcard='%u'", client->guildcard );
+		sprintf_s(myQuery, _countof(myQuery), "SELECT * from key_data WHERE guildcard='%u'", client->guildcard );
 
 		//printf ("MySQL query %s\n", myQuery );
 
@@ -1538,7 +1540,7 @@ void SendE2 (BANANA* client)
 			{
 				//debug ("Key data does not exist...");
 				mysql_real_escape_string ( myData, &key_data_send[0], &E2_Base[0x11C], 420 );
-				sprintf (&myQuery[0], "INSERT INTO key_data (guildcard, controls) VALUES ('%u','%s')", client->guildcard, (char*) &key_data_send[0] );
+				sprintf_s(myQuery, _countof(myQuery), "INSERT INTO key_data (guildcard, controls) VALUES ('%u','%s')", client->guildcard, (char*) &key_data_send[0] );
 				memcpy (&PacketE2Data[0x11C], &E2_Base[0x11C], 420);
 				if ( mysql_query ( myData, &myQuery[0] ) )
 					debug ("Could not insert key information into database.");
@@ -1940,7 +1942,7 @@ void AckCharacter_Creation(unsigned char slotnum, BANANA* client)
 
 #else
 
-		sprintf (&myQuery[0], "SELECT * from character_data WHERE guildcard='%u' AND slot='%u'", client->guildcard, slotnum );
+		sprintf_s(myQuery, _countof(myQuery), "SELECT * from character_data WHERE guildcard='%u' AND slot='%u'", client->guildcard, slotnum );
 		//printf ("MySQL query %s\n", myQuery );
 
 		if ( ! mysql_query ( myData, &myQuery[0] ) )
@@ -1952,7 +1954,7 @@ void AckCharacter_Creation(unsigned char slotnum, BANANA* client)
 				if (client->dress_flag == 0)
 				{
 					// Delete character if recreating...
-					sprintf (&myQuery[0], "DELETE from character_data WHERE guildcard='%u' AND slot ='%u'", client->guildcard, slotnum );
+					sprintf_s(myQuery, _countof(myQuery), "DELETE from character_data WHERE guildcard='%u' AND slot ='%u'", client->guildcard, slotnum );
 					mysql_query ( myData, &myQuery[0] );
 				}
 				else
@@ -1977,11 +1979,11 @@ void AckCharacter_Creation(unsigned char slotnum, BANANA* client)
 			return;
 		}
 		if (client->dress_flag == 0)
-			sprintf (&myQuery[0], "INSERT INTO character_data (guildcard,slot,data,header) VALUES ('%u','%u','%s','%s')", client->guildcard, slotnum, (char*) &E7chardata[0], (char*) &chardata[0] );
+			sprintf_s(myQuery, _countof(myQuery), "INSERT INTO character_data (guildcard,slot,data,header) VALUES ('%u','%u','%s','%s')", client->guildcard, slotnum, (char*) &E7chardata[0], (char*) &chardata[0] );
 		else
 		{
 			debug ("Update character...");
-			sprintf (&myQuery[0], "UPDATE character_data SET data='%s', header='%s' WHERE guildcard='%u' AND slot='%u'", (char*) &E7chardata[0], (char*) &chardata[0], client->guildcard, slotnum  );
+			sprintf_s(myQuery, _countof(myQuery), "UPDATE character_data SET data='%s', header='%s' WHERE guildcard='%u' AND slot='%u'", (char*) &E7chardata[0], (char*) &chardata[0], client->guildcard, slotnum  );
 		}
 		if ( ! mysql_query ( myData, &myQuery[0] ) )
 		{
@@ -1992,7 +1994,7 @@ void AckCharacter_Creation(unsigned char slotnum, BANANA* client)
 			PacketE4[0x0C] = 0x00;
 			cipher_ptr = &client->server_cipher;
 			encryptcopy (client, &PacketE4[0], sizeof (PacketE4));
-			sprintf (&myQuery[0], "UPDATE security_data SET slotnum = '%u' WHERE guildcard = '%u'", slotnum, client->guildcard );
+			sprintf_s(myQuery, _countof(myQuery), "UPDATE security_data SET slotnum = '%u' WHERE guildcard = '%u'", slotnum, client->guildcard );
 			if ( mysql_query ( myData, &myQuery[0] ) )
 			{
 				Send1A ("Could not select character.", client);
@@ -2048,7 +2050,7 @@ void SendE4_E5(unsigned char slotnum, unsigned char selecting, BANANA* client)
 
 
 #else
-		sprintf (&myQuery[0], "SELECT * from character_data WHERE guildcard='%u' AND slot='%u'", client->guildcard, slotnum );
+		sprintf_s(myQuery, _countof(myQuery), "SELECT * from character_data WHERE guildcard='%u' AND slot='%u'", client->guildcard, slotnum );
 		//printf ("MySQL query %s\n", myQuery );
 
 		// Check to see if the character exists in that slot.
@@ -2153,7 +2155,7 @@ void SendE4_E5(unsigned char slotnum, unsigned char selecting, BANANA* client)
 						client->todc = 1;
 					}
 #else
-					sprintf (&myQuery[0], "UPDATE security_data SET slotnum = '%u' WHERE guildcard = '%u'", slotnum, client->guildcard );
+					sprintf_s(myQuery, _countof(myQuery), "UPDATE security_data SET slotnum = '%u' WHERE guildcard = '%u'", slotnum, client->guildcard );
 					if ( mysql_query ( myData, &myQuery[0] ) )
 					{
 						Send1A ("Could not select character.", client);
@@ -2262,7 +2264,7 @@ void SendDC (int sendChecksum, unsigned char PacketNum, BANANA* client)
 				}
 			}
 #else
-			sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u' ORDER BY priority", client->guildcard );
+			sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u' ORDER BY priority", client->guildcard );
 			//printf ("MySQL query %s\n", myQuery );
 
 			// Check to see if the account has any guild cards.
@@ -2735,7 +2737,7 @@ void ShipProcessPacket (ORANGE* ship)
 						}
 #else
 
-						sprintf (&myQuery[0], "SELECT * from ship_data" );
+						sprintf_s(myQuery, _countof(myQuery), "SELECT * from ship_data" );
 
 						if ( ! mysql_query ( myData, &myQuery[0] ) )
 						{
@@ -2799,7 +2801,7 @@ void ShipProcessPacket (ORANGE* ship)
 									shipOK = 0;
 								}
 #else
-								sprintf (&myQuery[0], "SELECT * from ship_data WHERE idx='%u'", ship->key_index );
+								sprintf_s(myQuery, _countof(myQuery), "SELECT * from ship_data WHERE idx='%u'", ship->key_index );
 
 								if ( ! mysql_query ( myData, &myQuery[0] ) )
 								{
@@ -3013,7 +3015,7 @@ void ShipProcessPacket (ORANGE* ship)
 				compressShipPacket ( ship, &ship->encryptbuf[0x00], size );
 #else
 
-				sprintf (&myQuery[0], "SELECT * from character_data WHERE guildcard='%u' AND slot='%u'", guildcard, slotnum );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from character_data WHERE guildcard='%u' AND slot='%u'", guildcard, slotnum );
 
 				//debug ("MySQL query executing ... %s ", &myQuery[0] );
 
@@ -3035,7 +3037,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 						// Get the common bank or create it
 
-						sprintf (&myQuery[0], "SELECT * from bank_data WHERE guildcard='%u'", guildcard );
+						sprintf_s(myQuery, _countof(myQuery), "SELECT * from bank_data WHERE guildcard='%u'", guildcard );
 
 						//debug ("MySQL query executing ... %s ", &myQuery[0] );
 
@@ -3056,7 +3058,7 @@ void ShipProcessPacket (ORANGE* ship)
 								memcpy (&ship->encryptbuf[0x0C+sizeof(CHARDATA)], &empty_bank, sizeof (BANK));
 								mysql_real_escape_string ( myData, &E7chardata[0], (unsigned char*) &empty_bank, sizeof (BANK) );
 
-								sprintf (&myQuery[0], "INSERT into bank_data (guildcard, data) VALUES ('%u','%s')", guildcard, (char*) &E7chardata[0] );
+								sprintf_s(myQuery, _countof(myQuery), "INSERT into bank_data (guildcard, data) VALUES ('%u','%s')", guildcard, (char*) &E7chardata[0] );
 								if ( mysql_query ( myData, &myQuery[0] ) )
 								{
 									debug ("Could not create common bank for guild card %u.", guildcard);
@@ -3076,7 +3078,7 @@ void ShipProcessPacket (ORANGE* ship)
 						// Update the last used character info...
 
 						mysql_real_escape_string ( myData, &E7chardata[0], (unsigned char*) &PlayerData->name[0], 24 );
-						sprintf (&myQuery[0], "UPDATE account_data SET lastchar = '%s' WHERE guildcard = '%u'", (char*) &E7chardata[0], PlayerData->guildCard );
+						sprintf_s(myQuery, _countof(myQuery), "UPDATE account_data SET lastchar = '%s' WHERE guildcard = '%u'", (char*) &E7chardata[0], PlayerData->guildCard );
 						mysql_query ( myData, &myQuery[0] );
 
 					}
@@ -3087,7 +3089,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 					if ( ship->encryptbuf[0x01] != 0x02 )
 					{
-						sprintf (&myQuery[0], "SELECT teamid,privlevel from account_data WHERE guildcard='%u'", guildcard );
+						sprintf_s(myQuery, _countof(myQuery), "SELECT teamid,privlevel from account_data WHERE guildcard='%u'", guildcard );
 
 						if ( ! mysql_query ( myData, &myQuery[0] ) )
 						{
@@ -3106,7 +3108,7 @@ void ShipProcessPacket (ORANGE* ship)
 								PlayerData->guildCard2 = PlayerData->guildCard;
 								PlayerData->teamID = (unsigned) teamid;
 								PlayerData->privilegeLevel = privlevel;
-								sprintf (&myQuery[0], "SELECT name,flag from team_data WHERE teamid = '%i'", teamid);
+								sprintf_s(myQuery, _countof(myQuery), "SELECT name,flag from team_data WHERE teamid = '%i'", teamid);
 								if ( ! mysql_query ( myData, &myQuery[0] ) )
 								{
 									myResult = mysql_store_result ( myData );
@@ -3166,7 +3168,7 @@ void ShipProcessPacket (ORANGE* ship)
 #else
 
 				mysql_real_escape_string ( myData, &E7chardata[0], (unsigned char*) &ship->decryptbuf[0x0C+sizeof(CHARDATA)], sizeof (BANK) );
-				sprintf (&myQuery[0], "UPDATE bank_data set data = '%s' WHERE guildcard = '%u'", (char*) &E7chardata[0], guildcard );
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE bank_data set data = '%s' WHERE guildcard = '%u'", (char*) &E7chardata[0], guildcard );
 				if ( mysql_query ( myData, &myQuery[0] ) )
 				{
 					debug ("Could not save common bank for guild card %u.", guildcard);
@@ -3264,7 +3266,7 @@ void ShipProcessPacket (ORANGE* ship)
 				}
 #else
 				mysql_real_escape_string ( myData, &E7chardata[0], (unsigned char*) &ship->decryptbuf[0x0C], sizeof (CHARDATA) );
-				sprintf (&myQuery[0], "UPDATE character_data set data = '%s' WHERE guildcard = '%u' AND slot = '%u'", (char*) &E7chardata[0], guildcard, slotnum );
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE character_data set data = '%s' WHERE guildcard = '%u' AND slot = '%u'", (char*) &E7chardata[0], guildcard, slotnum );
 				if ( mysql_query ( myData, &myQuery[0] ) )
 				{
 					debug ("Could not save character information for guild card user %u (%02x)", guildcard, slotnum);
@@ -3291,7 +3293,7 @@ void ShipProcessPacket (ORANGE* ship)
 				}
 #else
 				mysql_real_escape_string ( myData, &E7chardata[0], (unsigned char*) &ship->decryptbuf[0x2FCC], 420 );
-				sprintf (&myQuery[0], "UPDATE key_data set controls = '%s' WHERE guildcard = '%u'", (char*) &E7chardata[0], guildcard );
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE key_data set controls = '%s' WHERE guildcard = '%u'", (char*) &E7chardata[0], guildcard );
 				if ( mysql_query ( myData, &myQuery[0] ) )
 					debug ("Could not save control information for guild card user %u", guildcard);
 #endif
@@ -3391,7 +3393,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 				// Delete guild card if it exists...
 
-				sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
 
 				//printf ("MySQL query %s\n", myQuery );
 
@@ -3402,7 +3404,7 @@ void ShipProcessPacket (ORANGE* ship)
 					mysql_free_result ( myResult );
 					if ( gc_exists )
 					{
-						sprintf (&myQuery[0], "DELETE from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
+						sprintf_s(myQuery, _countof(myQuery), "DELETE from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
 						mysql_query ( myData, &myQuery[0] );
 					}
 				}
@@ -3414,7 +3416,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 				gc_priority = 1;
 
-				sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u'", clientGcn );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u'", clientGcn );
 
 				if ( ! mysql_query ( myData, &myQuery[0] ) )
 				{
@@ -3425,7 +3427,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 					if (num_gcs)
 					{
-						sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u' ORDER by priority DESC", clientGcn );
+						sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u' ORDER by priority DESC", clientGcn );
 						if ( ! mysql_query ( myData, &myQuery[0] ) )
 						{
 							myResult = mysql_store_result ( myData );
@@ -3451,7 +3453,7 @@ void ShipProcessPacket (ORANGE* ship)
 
 					gccomment[44] = 0x0000;
 
-					sprintf (&myQuery[0], "INSERT INTO guild_data (accountid,friendid,friendname,friendtext,sectionid,class,comment,priority) VALUES ('%u','%u','%s','%s','%u','%u','%s','%u')",
+					sprintf_s(myQuery, _countof(myQuery), "INSERT INTO guild_data (accountid,friendid,friendname,friendtext,sectionid,class,comment,priority) VALUES ('%u','%u','%s','%s','%u','%u','%s','%u')",
 						clientGcn, friendGcn, (char*) &gcname[0], (char*) &gctext[0], friendSecID, friendClass, (char*) &gccomment[0], gc_priority );
 
 					if ( mysql_query ( myData, &myQuery[0] ) )
@@ -3489,7 +3491,7 @@ void ShipProcessPacket (ORANGE* ship)
 				}
 #else
 
-				sprintf (&myQuery[0], "DELETE from guild_data WHERE accountid = '%u' AND friendid = '%u'", clientGcn, deletedGcn );
+				sprintf_s(myQuery, _countof(myQuery), "DELETE from guild_data WHERE accountid = '%u' AND friendid = '%u'", clientGcn, deletedGcn );
 				if ( mysql_query ( myData, &myQuery[0] ) )
 					debug ("Could not delete guild card for user %u", clientGcn );
 #endif
@@ -3516,7 +3518,7 @@ void ShipProcessPacket (ORANGE* ship)
 #else
 				mysql_real_escape_string (myData, &gctext[0], &ship->decryptbuf[0x0E], 0x44);
 
-				sprintf (&myQuery[0], "UPDATE guild_data set comment = '%s' WHERE accountid = '%u' AND friendid = '%u'", (char*) &gctext[0], clientGcn, friendGcn );
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE guild_data set comment = '%s' WHERE accountid = '%u' AND friendid = '%u'", (char*) &gctext[0], clientGcn, friendGcn );
 
 				if ( mysql_query ( myData, &myQuery[0] ) )
 					debug ("Could not update guild card comment for user %u", clientGcn );
@@ -3551,7 +3553,7 @@ void ShipProcessPacket (ORANGE* ship)
 					}
 				}
 #else
-				sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, gcn1 );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, gcn1 );
 
 				if ( ! mysql_query ( myData, &myQuery[0] ) )
 				{
@@ -3582,7 +3584,7 @@ void ShipProcessPacket (ORANGE* ship)
 					}
 				}
 #else
-				sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, gcn2 );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, gcn2 );
 
 				if ( ! mysql_query ( myData, &myQuery[0] ) )
 				{
@@ -3616,10 +3618,10 @@ void ShipProcessPacket (ORANGE* ship)
 					memcpy (guild_data[ds_found], guild_data[ds2], sizeof (L_GUILD_DATA));
 					memcpy (guild_data[ds2], &tempgc, sizeof (L_GUILD_DATA));
 #else
-					sprintf (&myQuery[0], "UPDATE guild_data SET priority = '%u' WHERE accountid = '%u' AND friendid = '%u'", priority1, clientGcn, gcn1 );
+					sprintf_s(myQuery, _countof(myQuery), "UPDATE guild_data SET priority = '%u' WHERE accountid = '%u' AND friendid = '%u'", priority1, clientGcn, gcn1 );
 					if ( mysql_query ( myData, &myQuery[0] ) )
 						debug ("Could not update guild card sort information for user %u", clientGcn);
-					sprintf (&myQuery[0], "UPDATE guild_data SET priority = '%u' WHERE accountid = '%u' AND friendid = '%u'", priority2, clientGcn, gcn2 );
+					sprintf_s(myQuery, _countof(myQuery), "UPDATE guild_data SET priority = '%u' WHERE accountid = '%u' AND friendid = '%u'", priority2, clientGcn, gcn2 );
 					if ( mysql_query ( myData, &myQuery[0] ) )
 						debug ("Could not update guild card sort information for user %u", clientGcn);
 #endif
@@ -3656,7 +3658,7 @@ void ShipProcessPacket (ORANGE* ship)
 				}
 #else
 
-				sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
 
 				//printf ("MySQL query %s\n", myQuery );
 
@@ -3690,7 +3692,7 @@ void ShipProcessPacket (ORANGE* ship)
 				if ( ( gc_exists == 0 ) && ( teamid != 0 ) )
 				{
 					// Well, they don't appear to have this person's guild card... so let's check the team list...
-					sprintf (&myQuery[0], "SELECT * from account_data WHERE guildcard='%u' AND teamid='%u'", friendGcn, teamid );
+					sprintf_s(myQuery, _countof(myQuery), "SELECT * from account_data WHERE guildcard='%u' AND teamid='%u'", friendGcn, teamid );
 
 					//printf ("MySQL query %s\n", myQuery );
 
@@ -3758,7 +3760,7 @@ void ShipProcessPacket (ORANGE* ship)
 					}
 				}
 #else
-				sprintf (&myQuery[0], "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from guild_data WHERE accountid='%u' AND friendid='%u'", clientGcn, friendGcn );
 
 				//printf ("MySQL query %s\n", myQuery );
 
@@ -3793,7 +3795,7 @@ void ShipProcessPacket (ORANGE* ship)
 				if ( ( gc_exists == 0 ) && ( teamid != 0 ) )
 				{
 					// Well, they don't appear to have this person's guild card... so let's check the team list...
-					sprintf (&myQuery[0], "SELECT * from account_data WHERE guildcard='%u' AND teamid='%u'", friendGcn, teamid );
+					sprintf_s(myQuery, _countof(myQuery), "SELECT * from account_data WHERE guildcard='%u' AND teamid='%u'", friendGcn, teamid );
 
 					//printf ("MySQL query %s\n", myQuery );
 
@@ -3895,7 +3897,7 @@ void ShipProcessPacket (ORANGE* ship)
 				}
 #else
 				mysql_real_escape_string (myData, &TeamNameCheck[0], &ship->decryptbuf[0x06], 24);
-				sprintf (&myQuery[0], "SELECT * from team_data WHERE name='%s'", (char*) &TeamNameCheck[0] );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from team_data WHERE name='%s'", (char*) &TeamNameCheck[0] );
 				if ( ! mysql_query ( myData, &myQuery[0] ) )
 				{
 					myResult = mysql_store_result ( myData );
@@ -3939,11 +3941,11 @@ void ShipProcessPacket (ORANGE* ship)
 							}
 						}
 #else
-						sprintf (&myQuery[0], "INSERT into team_data (name,owner,flag) VALUES ('%s','%u','%s')", (char*) &TeamNameCheck[0], gcn, (char*) &DefaultTeamFlagSlashes[0]);
+						sprintf_s(myQuery, _countof(myQuery), "INSERT into team_data (name,owner,flag) VALUES ('%s','%u','%s')", (char*) &TeamNameCheck[0], gcn, (char*) &DefaultTeamFlagSlashes[0]);
 						if ( ! mysql_query ( myData, &myQuery[0] ) )
 						{
 							teamid = (unsigned) mysql_insert_id( myData );
-							sprintf (&myQuery[0], "UPDATE account_data SET teamid='%u', privlevel='%u' WHERE guildcard='%u'", teamid, 0x40, gcn );
+							sprintf_s(myQuery, _countof(myQuery), "UPDATE account_data SET teamid='%u', privlevel='%u' WHERE guildcard='%u'", teamid, 0x40, gcn );
 							if ( mysql_query ( myData, &myQuery[0] ) )
 								CreateResult = 1;
 							else
@@ -3995,7 +3997,7 @@ void ShipProcessPacket (ORANGE* ship)
 				}
 #else
 				mysql_real_escape_string ( myData, &FlagSlashes[0], &ship->decryptbuf[0x06], 0x800 );
-				sprintf ( &myQuery[0], "UPDATE team_data SET flag='%s' WHERE teamid='%u'", (char*) &FlagSlashes[0], teamid );
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE team_data SET flag='%s' WHERE teamid='%u'", (char*) &FlagSlashes[0], teamid );
 				if (! mysql_query ( myData, &myQuery[0] ) )
 				{
 					ship->encryptbuf[0x00] = 0x09;
@@ -4042,9 +4044,9 @@ void ShipProcessPacket (ORANGE* ship)
 					UpdateDataFile ("account.dat", ds, account_data[ds], sizeof (L_ACCOUNT_DATA), 0);
 				}
 #else
-				sprintf (&myQuery[0], "DELETE from team_data WHERE teamid='%u'", teamid );
+				sprintf_s(myQuery, _countof(myQuery), "DELETE from team_data WHERE teamid='%u'", teamid );
 				mysql_query (myData, &myQuery[0]);
-				sprintf (&myQuery[0], "UPDATE account_data SET teamid='-1' WHERE teamid='%u'", teamid);
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE account_data SET teamid='-1' WHERE teamid='%u'", teamid);
 				mysql_query (myData, &myQuery[0]);
 #endif
 				ship->encryptbuf[0x00] = 0x09;
@@ -4077,7 +4079,7 @@ void ShipProcessPacket (ORANGE* ship)
 					}
 				}
 #else
-				sprintf (&myQuery[0], "UPDATE account_data SET teamid='-1' WHERE guildcard='%u' AND teamid = '%u'", gcn, teamid);
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE account_data SET teamid='-1' WHERE guildcard='%u' AND teamid = '%u'", gcn, teamid);
 				mysql_query (myData, &myQuery[0]);
 #endif
 				ship->encryptbuf[0x00] = 0x09;
@@ -4155,7 +4157,7 @@ void ShipProcessPacket (ORANGE* ship)
 				packet_offset += 0x0A;
 				compressShipPacket (ship, &ship->encryptbuf[0x00], packet_offset);
 #else
-				sprintf (&myQuery[0], "SELECT guildcard,privlevel,lastchar from account_data WHERE teamid='%u'", teamid );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT guildcard,privlevel,lastchar from account_data WHERE teamid='%u'", teamid );
 				if ( ! mysql_query ( myData, &myQuery[0] ) )
 				{
 					myResult = mysql_store_result ( myData );
@@ -4231,10 +4233,10 @@ void ShipProcessPacket (ORANGE* ship)
 					}
 				}
 #else
-				sprintf (&myQuery[0], "UPDATE account_data SET privlevel='%u' WHERE guildcard='%u' AND teamid='%u'", privlevel, gcn, teamid);
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE account_data SET privlevel='%u' WHERE guildcard='%u' AND teamid='%u'", privlevel, gcn, teamid);
 				mysql_query (myData, &myQuery[0]);
 				if (privlevel == 0x40)  // Master Transfer
-					sprintf (&myQuery[0], "UPDATE team_data SET owner='%u' WHERE teamid='%u'", gcn, teamid);
+					sprintf_s(myQuery, _countof(myQuery), "UPDATE team_data SET owner='%u' WHERE teamid='%u'", gcn, teamid);
 				mysql_query (myData, &myQuery[0]);
 #endif
 				ship->encryptbuf[0x00] = 0x09;
@@ -4266,7 +4268,7 @@ void ShipProcessPacket (ORANGE* ship)
 					}
 				}
 #else
-				sprintf (&myQuery[0], "UPDATE account_data SET teamid='%u', privlevel='0' WHERE guildcard='%u'", teamid, gcn);
+				sprintf_s(myQuery, _countof(myQuery), "UPDATE account_data SET teamid='%u', privlevel='0' WHERE guildcard='%u'", teamid, gcn);
 				mysql_query (myData, &myQuery[0]);
 #endif
 				ship->encryptbuf[0x00] = 0x09;
@@ -4339,7 +4341,7 @@ void ShipProcessPacket (ORANGE* ship)
 					}
 				}
 #else
-				sprintf (&myQuery[0], "SELECT * from security_data WHERE guildcard='%u'", gcn );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from security_data WHERE guildcard='%u'", gcn );
 				// Nom nom nom
 				if ( ! mysql_query ( myData, &myQuery[0] ) )
 				{
@@ -4641,7 +4643,7 @@ void CharacterProcessPacket (BANANA* client)
 #else
 			mysql_real_escape_string ( myData, &hwinfo[0], &client->decryptbuf[0x84], 8);
 			memcpy (&client->hwinfo[0], &hwinfo[0], 18);
-			sprintf (&myQuery[0], "SELECT * from account_data WHERE username='%s'", username );
+			sprintf_s(myQuery, _countof(myQuery), "SELECT * from account_data WHERE username='%s'", username );
 
 			// Check to see if that account already exists.
 			if ( ! mysql_query ( myData, &myQuery[0] ) )
@@ -4655,10 +4657,10 @@ void CharacterProcessPacket (BANANA* client)
 				{
 					myRow = mysql_fetch_row ( myResult );
 					max_fields = mysql_num_fields ( myResult );
-					sprintf (&password[strlen(password)], "_%s_salt", myRow[3] );
+					sprintf_s(&password[strlen(password)], _countof(password) - strlen(password), "_%s_salt", myRow[3] );
 					MDString (&password[0], &MDBuffer[0] );
 					for (ch=0;ch<16;ch++)
-						sprintf (&md5password[ch*2], "%02x", (unsigned char) MDBuffer[ch]);
+						sprintf_s(&md5password[ch*2], _countof(md5password) - ch * 2, "%02x", (unsigned char) MDBuffer[ch]);
 					md5password[32] = 0;
 					if (!strcmp(&md5password[0],myRow[1]))
 					{
@@ -4687,7 +4689,7 @@ void CharacterProcessPacket (BANANA* client)
 
 			// Hardware info ban check...
 
-			sprintf (&myQuery[0], "SELECT * from hw_bans WHERE hwinfo='%s'", hwinfo );
+			sprintf_s(myQuery, _countof(myQuery), "SELECT * from hw_bans WHERE hwinfo='%s'", hwinfo );
 			if ( ! mysql_query ( myData, &myQuery[0] ) )
 			{
 				myResult = mysql_store_result ( myData );
@@ -4700,7 +4702,7 @@ void CharacterProcessPacket (BANANA* client)
 
 			if ( fail_to_auth == 0)
 			{
-				sprintf (&myQuery[0], "SELECT * from security_data WHERE guildcard='%u'", gcn );
+				sprintf_s(myQuery, _countof(myQuery), "SELECT * from security_data WHERE guildcard='%u'", gcn );
 				// Nom nom nom
 				if ( ! mysql_query ( myData, &myQuery[0] ) )
 				{
@@ -4800,7 +4802,7 @@ void CharacterProcessPacket (BANANA* client)
 						}
 					}
 #else
-					sprintf (&myQuery[0], "UPDATE security_data set thirtytwo = '%i' WHERE guildcard = '%u'", security_thirtytwo_check, gcn );
+					sprintf_s(myQuery, _countof(myQuery), "UPDATE security_data set thirtytwo = '%i' WHERE guildcard = '%u'", security_thirtytwo_check, gcn );
 					// Nom, nom, nom.
 					if ( mysql_query ( myData, &myQuery[0] ) )
 					{
@@ -4836,7 +4838,7 @@ void CharacterProcessPacket (BANANA* client)
 							}
 						}
 #else
-						sprintf (&myQuery[0], "UPDATE account_data set lastip = '%s', lasthwinfo = '%s' WHERE username = '%s'", client->IP_Address, hwinfo, username );
+						sprintf_s(myQuery, _countof(myQuery), "UPDATE account_data set lastip = '%s', lasthwinfo = '%s' WHERE username = '%s'", client->IP_Address, hwinfo, username );
 						mysql_query ( myData, &myQuery[0] );
 #endif
 						client->lastTick = (unsigned) servertime;
@@ -5032,7 +5034,7 @@ void LoginProcessPacket (BANANA* client)
 			mysql_real_escape_string ( myData, &hwinfo[0], &client->decryptbuf[0x84], 8);
 			memcpy (&client->hwinfo[0], &hwinfo[0], 18);
 
-			sprintf (&myQuery[0], "SELECT * from account_data WHERE username='%s'", username );
+			sprintf_s(myQuery, _countof(myQuery), "SELECT * from account_data WHERE username='%s'", username );
 
 			// Check to see if that account already exists.
 			if ( ! mysql_query ( myData, &myQuery[0] ) )
@@ -5046,10 +5048,10 @@ void LoginProcessPacket (BANANA* client)
 				{
 					myRow = mysql_fetch_row ( myResult );
 					max_fields = mysql_num_fields ( myResult );
-					sprintf (&password[strlen(password)], "_%s_salt", myRow[3] );
+					sprintf_s(&password[strlen(password)], _countof(password) - strlen(password), "_%s_salt", myRow[3] );
 					MDString (&password[0], &MDBuffer[0] );
 					for (ch=0;ch<16;ch++)
-						sprintf (&md5password[ch*2], "%02x", (unsigned char) MDBuffer[ch]);
+						sprintf_s(&md5password[ch*2], _countof(md5password) - ch * 2, "%02x", (unsigned char) MDBuffer[ch]);
 					md5password[32] = 0;
 					if (!strcmp(&md5password[0],myRow[1]))
 					{
@@ -5077,7 +5079,7 @@ void LoginProcessPacket (BANANA* client)
 
 			// Hardware info ban check...
 
-			sprintf (&myQuery[0], "SELECT * from hw_bans WHERE hwinfo='%s'", hwinfo );
+			sprintf_s(myQuery, _countof(myQuery), "SELECT * from hw_bans WHERE hwinfo='%s'", hwinfo );
 			if ( ! mysql_query ( myData, &myQuery[0] ) )
 			{
 				myResult = mysql_store_result ( myData );
@@ -5155,10 +5157,10 @@ void LoginProcessPacket (BANANA* client)
 				security_data[free_record]->slotnum = -1;
 				UpdateDataFile ("security.dat", free_record, security_data[free_record], sizeof (L_SECURITY_DATA), new_record);
 #else
-				sprintf (&myQuery[0], "DELETE from security_data WHERE guildcard = '%u'", gcn );
+				sprintf_s(myQuery, _countof(myQuery), "DELETE from security_data WHERE guildcard = '%u'", gcn );
 				mysql_query ( myData, &myQuery[0] );
 				mysql_real_escape_string ( myData, &security_sixtyfour_binary[0], (char*) &security_sixtyfour_check, 8);
-				sprintf (&myQuery[0], "INSERT INTO security_data (guildcard, thirtytwo, sixtyfour, isgm) VALUES ('%u','0','%s', '%u')", gcn, (char*) &security_sixtyfour_binary, client->isgm );
+				sprintf_s(myQuery, _countof(myQuery), "INSERT INTO security_data (guildcard, thirtytwo, sixtyfour, isgm) VALUES ('%u','0','%s', '%u')", gcn, (char*) &security_sixtyfour_binary, client->isgm );
 				if ( mysql_query ( myData, &myQuery[0] ) )
 				{
 					Send1A ("Couldn't update security information in MySQL database.\nPlease contact the server administrator.", client);
@@ -5440,9 +5442,9 @@ main( int argc, char * argv[] )
 
 	memset (&dp[0], 0, sizeof (dp));
 
-	strcat (&dp[0], "Tethealla Login Server version ");
-	strcat (&dp[0], SERVER_VERSION );
-	strcat (&dp[0], " coded by Sodaboy");
+	strcat_s(dp, _countof(dp), "Tethealla Login Server version ");
+    strcat_s(dp, _countof(dp), SERVER_VERSION );
+    strcat_s(dp, _countof(dp), " coded by Sodaboy");
 	SetConsoleTitle (&dp[0]);
 
 	printf ("\nTethealla Login Server version %s  Copyright (C) 2008  Terry Chatman Jr.\n", SERVER_VERSION);
@@ -5611,7 +5613,7 @@ main( int argc, char * argv[] )
 
 	/* Set MySQL to time out after 7 days of inactivity... lulz :D */
 
-	sprintf (&myQuery[0], "SET SESSION wait_timeout = 604800");
+	sprintf_s(myQuery, _countof(myQuery), "SET SESSION wait_timeout = 604800");
 	mysql_query (myData, &myQuery[0]);
 	printf ("  OK!\n\n");
 
@@ -5630,7 +5632,7 @@ main( int argc, char * argv[] )
 
 #else
 
-	sprintf (&myQuery[0], "SELECT * from ship_data" );
+	sprintf_s(myQuery, _countof(myQuery), "SELECT * from ship_data" );
 
 	if ( ! mysql_query ( myData, &myQuery[0] ) )
 	{
@@ -5773,9 +5775,9 @@ main( int argc, char * argv[] )
 	nid.uFlags				= NIF_MESSAGE|NIF_ICON|NIF_TIP;
     nid.hIcon				= LoadIcon(hinst, MAKEINTRESOURCE(IDI_ICON1));
 	nid.szTip[0] = 0;
-	strcat (&nid.szTip[0], "Tethealla Login ");
-	strcat (&nid.szTip[0], SERVER_VERSION);
-	strcat (&nid.szTip[0], " - Double click to show/hide");
+	strcat_s(&nid.szTip[0], _countof(nid.szTip), "Tethealla Login ");
+    strcat_s(&nid.szTip[0], _countof(nid.szTip), SERVER_VERSION);
+    strcat_s(&nid.szTip[0], _countof(nid.szTip), " - Double click to show/hide");
     Shell_NotifyIcon(NIM_ADD, &nid);
 
 
@@ -6393,9 +6395,10 @@ void debug(char *fmt, ...)
 	va_list args;
 	char text[ MAX_MESG_LEN ];
 
-	va_start (args, fmt);
-	strcpy (text + vsprintf( text,fmt,args), "\r\n");
-	va_end (args);
+    va_start(args, fmt);
+    vsprintf_s(text, _countof(text), fmt, args);
+    strcat_s(text, _countof(text), "\r\n");
+    va_end(args);
 
 	fprintf( stderr, "%s", text);
 }

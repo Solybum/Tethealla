@@ -408,11 +408,11 @@ main( int argc, char * argv[] )
 		return 1;
 	}
 #endif
-	reg_seconds = (unsigned) regtime / 3600L;
+	reg_seconds = (unsigned) regtime;
 	ch = (unsigned char)strlen (&password[0]);
     _itoa_s (reg_seconds, config_data, _countof(config_data), 10);
 	//Throw some salt in the game ;)
-	sprintf_s (password, _countof(password), "_%s_salt", &config_data[0] );
+	sprintf_s(&password[strlen(password)], _countof(password) - strlen(password), "_%s_salt", &config_data[0]);
 	//printf ("New password = %s\n", password );
 	MDString (&password[0], &MDBuffer[0] );
 	for (ch=0;ch<16;ch++)

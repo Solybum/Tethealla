@@ -7044,7 +7044,34 @@ void UseItem (unsigned itemid, BANANA* client)
 				if ( ( eq_shield != -1 ) && ( i.item.data[2] > 0x15 ) && ( i.item.data[2] < 0x26 ) )
 				{
 					// Merges
-					client->character.inventory[eq_shield].item.data[2] = 0x3A + ( i.item.data[2] - 0x16 );
+					if (i.item.data[2] < 0x1D)
+					{
+						client->character.inventory[eq_shield].item.data[2] = 0x3A + (i.item.data[2] - 0x16);
+					}
+					else if (i.item.data[2] < 0x20)
+					{
+						client->character.inventory[eq_shield].item.data[2] = 0x3A + (i.item.data[2] - 0x15);
+					}
+					else if (i.item.data[2] < 0x23)
+					{
+						client->character.inventory[eq_shield].item.data[2] = 0x3A + (i.item.data[2] - 0x14);
+					}
+					else if (i.item.data[2] == 0x23)
+					{
+						client->character.inventory[eq_shield].item.data[2] = 0x41;
+					}
+					else if (i.item.data[2] == 0x24)
+					{
+						client->character.inventory[eq_shield].item.data[2] = 0x45;
+					}
+					else if (i.item.data[2] == 0x25)
+					{
+						client->character.inventory[eq_shield].item.data[2] = 0x49;
+					}
+					else
+					{
+						client->character.inventory[eq_shield].item.data[2] = 0x3A + (i.item.data[2] - 0x16);
+					}
 					SendItemToEnd (client->character.inventory[eq_shield].item.itemid, client);
 				}
 				else

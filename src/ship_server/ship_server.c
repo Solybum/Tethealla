@@ -2655,7 +2655,7 @@ void Send67 (BANANA* client, unsigned char preferred)
 						l->lobbyCount++;
 				}
 
-				memset (&PacketData[0x00], 0, 0x10);
+				memset (&PacketData[0x00], 0, 0x14);
 				PacketData[0x04] = l->lobbyCount;
 				PacketData[0x08] = client->clientID;
 				PacketData[0x0B] = ch;
@@ -2666,7 +2666,7 @@ void Send67 (BANANA* client, unsigned char preferred)
 				{
 					if ((l->slot_use[ch2]) && (l->client[ch2]))
 					{
-						memset (&PacketData[Offset], 0, 1316);
+						memset (&PacketData[Offset], 0, 1312);
 						Offset2 = Offset;
 						*(unsigned *)&PacketData[Offset] = 0x00010000;
 						Offset += 4;
@@ -2694,12 +2694,12 @@ void Send67 (BANANA* client, unsigned char preferred)
 								*(unsigned *) &PacketData[Offset2 + 0x3CA] = normalName;
 						if ((lClient->guildcard == client->guildcard) && (l->lobbyCount > 1))
 						{
-							memcpy (&PacketData2[0x00], &PacketData[0], 0x16 );
+							memcpy (&PacketData2[0x00], &PacketData[0], 0x14 );
 							PacketData2[0x00] = 0x34;
 							PacketData2[0x01] = 0x05;
 							PacketData2[0x02] = 0x68;
 							PacketData2[0x04] = 0x01;
-							memcpy (&PacketData2[0x16], &PacketData[Offset2], 1316 );
+							memcpy (&PacketData2[0x14], &PacketData[Offset2], 1312 );
 							SendToLobby ( client->lobby, 12, &PacketData2[0x00], 1332, client->guildcard );
 						}
 					}

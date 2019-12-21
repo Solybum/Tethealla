@@ -14537,7 +14537,7 @@ void LoadQuests (const char* filename, unsigned category)
 						qm->quest_indexes[qm->num_categories][qm->quest_counts[qm->num_categories]++] = numQuests++;
 
 					qnl = 0;
-					for (ch2=0x18;ch2<0x48;ch2+=2)
+					for (ch2=0x18;ch2<0x58;ch2+=2)
 					{
 						if ( *(unsigned short *) &qpdc_buffer[ch2] != 0x0000 )
 						{

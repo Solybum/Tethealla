@@ -130,7 +130,7 @@ int qflag (unsigned char* flag_data, unsigned flag, unsigned difficulty);
 
 /* variables */
 
-struct timeval select_timeout = { 
+struct timeval select_timeout = {
 	0,
 	5000
 };
@@ -149,7 +149,7 @@ unsigned common_rates[5] = { 0 };
 
 // Rare monster appearance rates
 
-unsigned	hildebear_rate, 
+unsigned	hildebear_rate,
 			rappy_rate,
 			lily_rate,
 			slime_rate,
@@ -222,7 +222,7 @@ unsigned char attachment_ep2[10][4][10][4096];
 
 /* Rare tables */
 
-unsigned rt_tables_ep1[0x200 * 10 * 4] = {0}; 
+unsigned rt_tables_ep1[0x200 * 10 * 4] = {0};
 unsigned rt_tables_ep2[0x200 * 10 * 4] = {0};
 unsigned rt_tables_ep4[0x200 * 10 * 4] = {0};
 
@@ -327,7 +327,7 @@ void packet_to_text ( unsigned char* buf, int len )
 		if (c3==16)
 		{
 			for (;c4<c;c4++)
-				if (buf[c4] >= 0x20) 
+				if (buf[c4] >= 0x20)
 					dp[c2++] = buf[c4];
 				else
 					dp[c2++] = 0x2E;
@@ -358,7 +358,7 @@ void packet_to_text ( unsigned char* buf, int len )
 	}
 
 	for (;c4<c;c4++)
-		if (buf[c4] >= 0x20) 
+		if (buf[c4] >= 0x20)
 			dp[c2++] = buf[c4];
 		else
 			dp[c2++] = 0x2E;
@@ -519,7 +519,7 @@ void load_language_file()
 	{
 		printf ("Language file does not exist...\nWill use English only...\n\n");
 		numLanguages = 1;
-		strcat (languageNames[0], "English");	
+		strcat (languageNames[0], "English");
 	}
 	else
 	{
@@ -604,7 +604,7 @@ void load_config_file()
 				case 0x02:
 					// Number of blocks
 					serverBlocks = atoi (&config_data[0]);
-					if (serverBlocks > 10) 
+					if (serverBlocks > 10)
 					{
 						printf ("You cannot host more than 10 blocks... Adjusted.\n");
 						serverBlocks = 10;
@@ -812,7 +812,7 @@ void Send08(BANANA* client)
 				else
 					game_flags = 0x40;
 				// Get flags for battle and one person games...
-				if ((l->gamePassword[0x00] != 0x00) || 
+				if ((l->gamePassword[0x00] != 0x00) ||
 					(l->gamePassword[0x01] != 0x00))
 					game_flags |= 0x02;
 				if ((l->quest_in_progress) || (l->oneperson)) // Can't join!
@@ -861,7 +861,7 @@ void ConstructBlockPacket()
 	Packet07Data[0x02] = 0x07;
 	Packet07Data[0x04] = serverBlocks+1;
 	_itoa (serverID, &tempName[0], 10);
-	if (serverID < 10) 
+	if (serverID < 10)
 	{
 		tempName[0] = 0x30;
 		tempName[1] = 0x30+serverID;
@@ -1542,7 +1542,7 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 				mm->exp = l->bptable[0x06].XP;
 			}
 
-			if ( ( mm->reserved[0] >> 16 ) == 0 )  
+			if ( ( mm->reserved[0] >> 16 ) == 0 )
 				l->mapIndex += 4; // Add 4 clones but only if there's no add value there already...
 			break;
 		case 131:
@@ -1724,7 +1724,7 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 				mm->rt_index = 58;
 				mm->exp = l->bptable [0x46].XP;
 			}
-			else 
+			else
 				if ( mm->skin & 0x01 )
 				{
 					// Merikle
@@ -1943,7 +1943,7 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			// Boota family
 			if ( mm->skin & 0x02 )
 			{
-				mm->rt_index = 11;			
+				mm->rt_index = 11;
 				mm->exp = l->bptable [0x03].XP;
 			}
 			else
@@ -2041,7 +2041,7 @@ void LoadObjectData (LOBBY* l, int unused, const char* filename)
 	unsigned oldIndex, num_records, ch, ch2;
 	char new_file[256];
 
-	if (!l) 
+	if (!l)
 		return;
 
 	memcpy (&new_file[0], filename, strlen (filename) + 1);
@@ -2086,7 +2086,7 @@ void LoadMapData (LOBBY* l, int aMob, const char* filename)
 	FILE* fp;
 	unsigned oldIndex, num_records;
 
-	if (!l) 
+	if (!l)
 		return;
 
 	//debug ("Loading map %s... current index: %u", filename, l->mapIndex);
@@ -2314,7 +2314,7 @@ void initialize_game (BANANA* client)
 				LoadObjectData ( l, 0, Spaceship1_Online_Maps [l->gameMap[24]] );
 
 				l->gameMap[32] = (unsigned char) mt_lrand() % 2; // Spaceship 2
-				l->gameMap[36] = 0x00; 
+				l->gameMap[36] = 0x00;
 				LoadMapData ( l, 0, Spaceship2_Online_Maps [l->gameMap[32]] );
 				LoadObjectData ( l, 0, Spaceship2_Online_Maps [l->gameMap[32]] );
 
@@ -2328,7 +2328,7 @@ void initialize_game (BANANA* client)
 				LoadMapData ( l, 0, Jungle2_Online_Maps [l->gameMap[52]] );
 				LoadObjectData ( l, 0, Jungle2_Online_Maps [l->gameMap[52]] );
 
-				l->gameMap[56] = 0x00; 
+				l->gameMap[56] = 0x00;
 				l->gameMap[60] = (unsigned char) mt_lrand() % 3; // Jungle 3
 				LoadMapData ( l, 0, Jungle3_Online_Maps [l->gameMap[60]] );
 				LoadObjectData ( l, 0, Jungle3_Online_Maps [l->gameMap[60]] );
@@ -2375,7 +2375,7 @@ void initialize_game (BANANA* client)
 				LoadObjectData ( l, 0, Spaceship1_Offline_Maps [l->gameMap[24]] );
 
 				l->gameMap[32] = (unsigned char) mt_lrand() % 2; // Spaceship 2
-				l->gameMap[36] = 0x00; 
+				l->gameMap[36] = 0x00;
 				LoadMapData ( l, 0, Spaceship2_Offline_Maps [l->gameMap[32]] );
 				LoadObjectData ( l, 0, Spaceship2_Offline_Maps [l->gameMap[32]] );
 
@@ -2389,7 +2389,7 @@ void initialize_game (BANANA* client)
 				LoadMapData ( l, 0, Jungle2_Offline_Maps [l->gameMap[52]] );
 				LoadObjectData ( l, 0, Jungle2_Offline_Maps [l->gameMap[52]] );
 
-				l->gameMap[56] = 0x00; 
+				l->gameMap[56] = 0x00;
 				l->gameMap[60] = (unsigned char) mt_lrand() % 3; // Jungle 3
 				LoadMapData ( l, 0, Jungle3_Offline_Maps [l->gameMap[60]] );
 				LoadObjectData ( l, 0, Jungle3_Offline_Maps [l->gameMap[60]] );
@@ -2661,15 +2661,15 @@ void Send67 (BANANA* client, unsigned char preferred)
 				PacketData[0x0B] = ch;
 				PacketData[0x0C] = client->block;
 				PacketData[0x0E] = shipEvent;
-				Offset = 0x16;
+				Offset = 0x14;
 				for (ch2=0;ch2<12;ch2++)
 				{
 					if ((l->slot_use[ch2]) && (l->client[ch2]))
 					{
 						memset (&PacketData[Offset], 0, 1316);
 						Offset2 = Offset;
-						PacketData[Offset++] = 0x01;
-						PacketData[Offset++] = 0x00;
+						*(unsigned *)&PacketData[Offset] = 0x00010000;
+						Offset += 4;
 						lClient = l->client[ch2];
 						*(unsigned *) &PacketData[Offset] = lClient->guildcard;
 						Offset += 24;
@@ -2679,11 +2679,12 @@ void Send67 (BANANA* client, unsigned char preferred)
 						Offset += 32;
 						PacketData[Offset++] = 0x02;
 						Offset += 3;
-						memcpy (&PacketData[Offset], &lClient->character.inventoryUse, 1246);
+						memcpy (&PacketData[Offset], &lClient->character.inventoryUse, 1244);
 						// Prevent crashing with NPCs
 						if (lClient->character.skinFlag)
 							memset (&PacketData[Offset+0x3A8], 0, 10);
-						Offset += 1246;
+						Offset += 1244;
+						
 						if (lClient->isgm == 1)
 							*(unsigned *) &PacketData[Offset2 + 0x3CA] = globalName;
 						else
@@ -3189,7 +3190,7 @@ void BroadcastToAll (unsigned short *mes, BANANA* client)
 			{
 				cipher_ptr = &connections[connectNum]->server_cipher;
 				encryptcopy (connections[connectNum], &PacketData[0], xEE_Len);
-			}	
+			}
 		}
 	}
 	else
@@ -3238,7 +3239,7 @@ void GlobalBroadcast (unsigned short *mes)
 		{
 			cipher_ptr = &connections[connectNum]->server_cipher;
 			encryptcopy (connections[connectNum], &PacketData[0], xEE_Len);
-		}	
+		}
 	}
 }
 
@@ -3365,7 +3366,7 @@ void SendEA (unsigned char command, BANANA* client)
 
 			l = (LOBBY*) client->lobby;
 
-			if ( client->lobbyNum < 0x10 ) 
+			if ( client->lobbyNum < 0x10 )
 				maxc = 12;
 			else
 				maxc = 4;
@@ -3544,7 +3545,7 @@ void UpdateGameItem (BANANA* client)
 
 	l = (LOBBY*) client->lobby;
 
-	for (ch=0;ch<client->character.inventoryUse;ch++) // By default this should already be sorted at the top, so no need for an in_use check...	
+	for (ch=0;ch<client->character.inventoryUse;ch++) // By default this should already be sorted at the top, so no need for an in_use check...
 		client->character.inventory[ch].item.itemid = l->playerItemID[client->clientID]++; // Keep synchronized
 }
 
@@ -3936,7 +3937,7 @@ void DeleteItemFromClient (unsigned itemid, unsigned count, unsigned drop, BANAN
 						(client->character.inventory[ch].flags & 0x08)) // equipped armor, remove slot items
 					{
 						for (ch2=0;ch2<client->character.inventoryUse;ch2++)
-							if ((client->character.inventory[ch2].item.data[0] == 0x01) && 
+							if ((client->character.inventory[ch2].item.data[0] == 0x01) &&
 								(client->character.inventory[ch2].item.data[1] != 0x02) &&
 								(client->character.inventory[ch2].flags & 0x08))
 							{
@@ -3997,7 +3998,7 @@ unsigned WithdrawFromBank (unsigned itemid, unsigned count, BANANA* client)
 
 					stack_count = ( client->character.bankInventory[ch].bank_count & 0xFF );
 					if ( !stack_count )
-						stack_count = 1;				
+						stack_count = 1;
 
 					if ( stack_count < count ) // Naughty!
 					{
@@ -4231,7 +4232,7 @@ void DepositIntoBank (unsigned itemid, unsigned count, BANANA* client)
 							(client->character.inventory[ch].flags & 0x08)) // equipped armor, remove slot items
 						{
 							for (ch2=0;ch2<client->character.inventoryUse;ch2++)
-								if ((client->character.inventory[ch2].item.data[0] == 0x01) && 
+								if ((client->character.inventory[ch2].item.data[0] == 0x01) &&
 									(client->character.inventory[ch2].item.data[1] != 0x02) &&
 									(client->character.inventory[ch2].flags & 0x08))
 								{
@@ -4347,7 +4348,7 @@ void DeleteFromInventory (INVENTORY_ITEM* i, unsigned count, BANANA* client)
 						(client->character.inventory[ch].flags & 0x08)) // equipped armor, remove slot items
 					{
 						for (ch2=0;ch2<client->character.inventoryUse;ch2++)
-							if ((client->character.inventory[ch2].item.data[0] == 0x01) && 
+							if ((client->character.inventory[ch2].item.data[0] == 0x01) &&
 								(client->character.inventory[ch2].item.data[1] != 0x02) &&
 								(client->character.inventory[ch2].flags & 0x08))
 							{
@@ -4649,7 +4650,7 @@ void FixItem (ITEM* i )
 			if ( i->data[ch3] & 128 )
 			{
 				srank = 1; // S-Rank
-				break; 
+				break;
 			}
 
 			if ( ( i->data[ch3] ) &&
@@ -4660,7 +4661,7 @@ void FixItem (ITEM* i )
 				if ( ( percent > 100 ) || ( percent < -100 ) )
 					percent = 0;
 				// Save percent
-				percent_table[i->data[ch3]] = 
+				percent_table[i->data[ch3]] =
 					percent;
 			}
 		}
@@ -5107,7 +5108,7 @@ void LogonProcessPacket (ORANGE* ship)
 					{
 						// Let the released client roam free...!
 						client = connections[connectNum];
-						Send19 (client->releaseIP[0], client->releaseIP[1], client->releaseIP[2], client->releaseIP[3], 
+						Send19 (client->releaseIP[0], client->releaseIP[1], client->releaseIP[2], client->releaseIP[3],
 							client->releasePort, client);
 						break;
 					}
@@ -5198,8 +5199,8 @@ void LogonProcessPacket (ORANGE* ship)
 						ship->encryptbuf[0x26] = 0x19;
 						*(unsigned *) &ship->encryptbuf[0x2C] = *(unsigned *) &serverIP[0];
 						blockPort = serverPort + connections[connectNum]->block;
-						*(unsigned short *) &ship->encryptbuf[0x30] = (unsigned short) blockPort;					
-						memcpy (&ship->encryptbuf[0x34], &lobbyString[0], 12 );						
+						*(unsigned short *) &ship->encryptbuf[0x30] = (unsigned short) blockPort;
+						memcpy (&ship->encryptbuf[0x34], &lobbyString[0], 12 );
 						if ( connections[connectNum]->lobbyNum < 0x10 )
 						{
 							if ( connections[connectNum]->lobbyNum < 10 )
@@ -5428,7 +5429,7 @@ void LogonProcessPacket (ORANGE* ship)
 				{
 					connectNum = serverConnectionList[ch];
 					if (connections[connectNum]->guildcard == gcn)
-					{					
+					{
 						tClient = connections[connectNum];
 						cipher_ptr = &tClient->server_cipher;
 						encryptcopy (tClient, &ship->decryptbuf[0x0E], size);
@@ -6755,7 +6756,7 @@ void UseItem (unsigned itemid, BANANA* client)
 				break;
 			case 0x42:
 				// Handgun: Guld or Master Raven used...
-				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x43) && 
+				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x43) &&
 					(client->character.inventory[eq_wep].item.data[2] == i.item.data[2]) &&
 					(client->character.inventory[eq_wep].item.data[3] == 0x09))
 				{
@@ -6769,7 +6770,7 @@ void UseItem (unsigned itemid, BANANA* client)
 				break;
 			case 0x43:
 				// Handgun: Milla or Last Swan used...
-				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x42) && 
+				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x42) &&
 					(client->character.inventory[eq_wep].item.data[2] == i.item.data[2]) &&
 					(client->character.inventory[eq_wep].item.data[3] == 0x09))
 				{
@@ -6802,7 +6803,7 @@ void UseItem (unsigned itemid, BANANA* client)
 				break;
 			case 0xAF:
 				// Ophelie Seize used...
-				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x1E) && 
+				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x1E) &&
 					(client->character.inventory[eq_wep].item.data[2] == 0x00))
 				{
 					client->character.inventory[eq_wep].item.data[1] = 0xB0; // Mille Marteaux
@@ -6815,7 +6816,7 @@ void UseItem (unsigned itemid, BANANA* client)
 				break;
 			case 0xB6:
 				// Guren used...
-				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0xB7) && 
+				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0xB7) &&
 					(client->character.inventory[eq_wep].item.data[2] == 0x00))
 				{
 					client->character.inventory[eq_wep].item.data[1] = 0xB8; // Jizai
@@ -6828,7 +6829,7 @@ void UseItem (unsigned itemid, BANANA* client)
 				break;
 			case 0xB7:
 				// Shouren used...
-				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0xB6) && 
+				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0xB6) &&
 					(client->character.inventory[eq_wep].item.data[2] == 0x00))
 				{
 					client->character.inventory[eq_wep].item.data[1] = 0xB8; // Jizai
@@ -6862,7 +6863,7 @@ void UseItem (unsigned itemid, BANANA* client)
 			{
 			case 0x2B:
 				// Chao Mag used
-				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x68) && 
+				if ((eq_wep != -1) && (client->character.inventory[eq_wep].item.data[1] == 0x68) &&
 					(client->character.inventory[eq_wep].item.data[2] == 0x00))
 				{
 					client->character.inventory[eq_wep].item.data[1] = 0x58; // Striker of Chao
@@ -6957,7 +6958,7 @@ void UseItem (unsigned itemid, BANANA* client)
 						if (!client->mode)
 							client->matuse[2]++;
 					}
-					else 
+					else
 						mat_exceed = 1;
 					break;
 				case 0x03:
@@ -7077,7 +7078,7 @@ void UseItem (unsigned itemid, BANANA* client)
 				else
 					switch ( i.item.data[2] )
 				{
-					case 0x00: 
+					case 0x00:
 						if ( ( eq_wep != -1 ) && ( client->character.inventory[eq_wep].item.data[1] == 0x8E ) )
 						{
 							client->character.inventory[eq_wep].item.data[1]  = 0x8E;
@@ -7129,8 +7130,8 @@ void UseItem (unsigned itemid, BANANA* client)
 						}
 						break;
 					case 0x03: // Blue-Black Stone
-						if ( ( eq_wep != -1 ) && ( client->character.inventory[eq_wep].item.data[1] == 0x2F ) && 
-							( client->character.inventory[eq_wep].item.data[2] == 0x00 ) && 
+						if ( ( eq_wep != -1 ) && ( client->character.inventory[eq_wep].item.data[1] == 0x2F ) &&
+							( client->character.inventory[eq_wep].item.data[2] == 0x00 ) &&
 							( client->character.inventory[eq_wep].item.data[3] == 0x19 ) )
 						{
 							client->character.inventory[eq_wep].item.data[2]  = 0x01; // Black King Bar
@@ -7170,7 +7171,7 @@ void UseItem (unsigned itemid, BANANA* client)
 						}
 						break;
 					case 0x05: // Magic Water
-						if ( ( eq_wep != -1 ) && ( client->character.inventory[eq_wep].item.data[1] == 0x56 ) ) 								
+						if ( ( eq_wep != -1 ) && ( client->character.inventory[eq_wep].item.data[1] == 0x56 ) )
 						{
 							if ( client->character.inventory[eq_wep].item.data[2] == 0x00 )
 							{
@@ -7195,21 +7196,21 @@ void UseItem (unsigned itemid, BANANA* client)
 						break;
 					case 0x06: // Parasitic Cell Type D
 						if ( eq_armor != -1 )
-							switch ( client->character.inventory[eq_armor].item.data[2] ) 
+							switch ( client->character.inventory[eq_armor].item.data[2] )
 						{
-							case 0x1D:  
+							case 0x1D:
 								client->character.inventory[eq_armor].item.data[2] = 0x20; // Parasite Wear: De Rol
 								SendItemToEnd (client->character.inventory[eq_armor].item.itemid, client);
 								break;
-							case 0x20: 
+							case 0x20:
 								client->character.inventory[eq_armor].item.data[2] = 0x21; // Parsite Wear: Nelgal
 								SendItemToEnd (client->character.inventory[eq_armor].item.itemid, client);
 								break;
-							case 0x21: 
+							case 0x21:
 								client->character.inventory[eq_armor].item.data[2] = 0x22; // Parasite Wear: Vajulla
 								SendItemToEnd (client->character.inventory[eq_armor].item.itemid, client);
 								break;
-							case 0x22: 
+							case 0x22:
 								client->character.inventory[eq_armor].item.data[2] = 0x2F; // Virus Armor: Lafuteria
 								SendItemToEnd (client->character.inventory[eq_armor].item.itemid, client);
 								break;
@@ -7224,7 +7225,7 @@ void UseItem (unsigned itemid, BANANA* client)
 								SendItemToEnd (client->character.inventory[eq_armor].item.itemid, client);
 							}
 							else
-								if ( client->character.inventory[eq_armor].item.data[2] == 0x2D ) 
+								if ( client->character.inventory[eq_armor].item.data[2] == 0x2D )
 								{
 									client->character.inventory[eq_armor].item.data[2] = 0x45; // Sweetheart
 									SendItemToEnd (client->character.inventory[eq_armor].item.itemid, client);
@@ -7280,7 +7281,7 @@ void UseItem (unsigned itemid, BANANA* client)
 							break;
 					case 0x0A: // Book of Hitogata
 						if ( ( eq_wep != -1 ) && ( client->character.inventory[eq_wep].item.data[1] == 0x8C ) &&
-							( client->character.inventory[eq_wep].item.data[2] == 0x02 ) && 
+							( client->character.inventory[eq_wep].item.data[2] == 0x02 ) &&
 							( client->character.inventory[eq_wep].item.data[3] == 0x09 ) )
 						{
 							client->character.inventory[eq_wep].item.data[1]  = 0x8C;
@@ -7381,7 +7382,7 @@ void UseItem (unsigned itemid, BANANA* client)
 									SendItemToEnd (client->character.inventory[eq_wep].item.itemid, client);
 								}
 								break;
-							case 0x6D: 
+							case 0x6D:
 								if ( client->character.inventory[eq_wep].item.data[3] == 0x14 )
 								{
 									client->character.inventory[eq_wep].item.data[2]  = 0x01; // Power Maser
@@ -7492,7 +7493,7 @@ void EquipItem (unsigned itemid, BANANA* client)
 				switch (client->character.inventory[ch].item.data[1])
 				{
 				case 0x01: // Check armor equip requirements
-					if ((!check_equip (armor_equip_table[client->character.inventory[ch].item.data[2]], client->equip_flags)) || 
+					if ((!check_equip (armor_equip_table[client->character.inventory[ch].item.data[2]], client->equip_flags)) ||
 						(client->character.level < armor_level_table[client->character.inventory[ch].item.data[2]]))
 					{
 						Send1A ("\"God/Equip\" is disallowed.", client);
@@ -7538,10 +7539,10 @@ void EquipItem (unsigned itemid, BANANA* client)
 					for (ch2=0;ch2<client->character.inventoryUse;ch2++)
 					{
 						// Another loop ;(
-						if ((client->character.inventory[ch2].item.data[0] == 0x01) && 
+						if ((client->character.inventory[ch2].item.data[0] == 0x01) &&
 							(client->character.inventory[ch2].item.data[1] == 0x03))
 						{
-							if ((client->character.inventory[ch2].flags & 0x08) && 
+							if ((client->character.inventory[ch2].flags & 0x08) &&
 								(client->character.inventory[ch2].item.data[4] < 0x04))
 								slot [client->character.inventory[ch2].item.data[4]] = 1;
 						}
@@ -7664,10 +7665,10 @@ unsigned GetShopPrice(INVENTORY_ITEM* ci)
 
 	price = 10;
 
-/*	printf ("Raw item data for this item is:\r\n%02x%02x%02x%02x\r\n%02x%02x%02x%02x\r\n%02x%02x%02x%02x\r\n%02x%02x%02x%02x\r\n", 
-		ci->item.data[0], ci->item.data[1], ci->item.data[2], ci->item.data[3], 
-		ci->item.data[4], ci->item.data[5], ci->item.data[6], ci->item.data[7], 
-		ci->item.data[8], ci->item.data[9], ci->item.data[10], ci->item.data[11], 
+/*	printf ("Raw item data for this item is:\r\n%02x%02x%02x%02x\r\n%02x%02x%02x%02x\r\n%02x%02x%02x%02x\r\n%02x%02x%02x%02x\r\n",
+		ci->item.data[0], ci->item.data[1], ci->item.data[2], ci->item.data[3],
+		ci->item.data[4], ci->item.data[5], ci->item.data[6], ci->item.data[7],
+		ci->item.data[8], ci->item.data[9], ci->item.data[10], ci->item.data[11],
 		ci->item.data[12], ci->item.data[13], ci->item.data[14], ci->item.data[15] ); */
 
 	switch (ci->item.data[0])
@@ -7804,7 +7805,7 @@ unsigned GetShopPrice(INVENTORY_ITEM* ci)
 				{
 					price = tool_prices[ch+1];
 					break;
-				}		
+				}
 		}
 		break;
 	}
@@ -8186,7 +8187,7 @@ void Send60 (BANANA* client)
 		size_check_index *= 2;
 
 		if (client->decryptbuf[0x08] == 0x06)
-			sizecheck = 0x114; 
+			sizecheck = 0x114;
 		else
 			sizecheck = size_check_table[size_check_index+1] + 4;
 
@@ -8216,7 +8217,7 @@ void Send60 (BANANA* client)
 		 ( client->decryptbuf[0x08] != 0x79 ) )
 		dont_send = 1;
 
-	if ( ( client->decryptbuf[0x08] == 0x07 ) && 
+	if ( ( client->decryptbuf[0x08] == 0x07 ) &&
 		 ( client->decryptbuf[0x0C] != client->clientID ) )
 		dont_send = 1;
 
@@ -8450,7 +8451,7 @@ void Send60 (BANANA* client)
 				dont_send = 1;
 				if ( client->lobbyNum < 0x10 )
 					client->todc = 1;
-			}		
+			}
 			break;
 		case 0x68:
 			// Telepipe check
@@ -8495,7 +8496,7 @@ void Send60 (BANANA* client)
 					for (ch=client->decryptbuf[0x0C];ch<8;ch++)
 						*(unsigned short*) &client->decryptbuf[0x10+(ch*2)] = ws_data;
 
-					if ( ws_ok ) 
+					if ( ws_ok )
 					{
 						if ( client->lobbyNum < 0x10 )
 							max_send = 12;
@@ -8772,8 +8773,8 @@ void Send60 (BANANA* client)
 								break;
 							case 0x03:
 								if ( ( l->floor[client->clientID] == 9 ) &&
-									( l->mapData[mid].base != 280 ) && 
-									( l->mapData[mid].base != 281 ) && 
+									( l->mapData[mid].base != 280 ) &&
+									( l->mapData[mid].base != 281 ) &&
 									( l->mapData[mid].base != 41 ) )
 									mid_mismatch = 1;
 								break;
@@ -9131,7 +9132,7 @@ void Send60 (BANANA* client)
 				for ( ci=0; ci < client->character.inventoryUse; ci++)
 				{
 					memcpy (&compare_item2, &client->character.inventory[ci].item.data[0], 3);
-					if ( ( client->character.inventory[ci].item.itemid == compare_itemid ) && 
+					if ( ( client->character.inventory[ci].item.itemid == compare_itemid ) &&
 						( compare_item1 == compare_item2 ) && ( client->character.inventory[ci].item.data[0] == 0x00 ) )
 					{
 						memset (&work_item, 0, sizeof (INVENTORY_ITEM));
@@ -9166,21 +9167,21 @@ void Send60 (BANANA* client)
 								break;
 							}
 							ai = 0;
-							if ((work_item2.item.data[6] > 0x00) && 
+							if ((work_item2.item.data[6] > 0x00) &&
 								(!(work_item2.item.data[6] & 128)))
 							{
 								num_attribs++;
 								if (work_item2.item.data[6] == client->decryptbuf[0x24])
 									ai = 7;
 							}
-							if ((work_item2.item.data[8] > 0x00) && 
+							if ((work_item2.item.data[8] > 0x00) &&
 								(!(work_item2.item.data[8] & 128)))
 							{
 								num_attribs++;
 								if (work_item2.item.data[8] == client->decryptbuf[0x24])
 									ai = 9;
 							}
-							if ((work_item2.item.data[10] > 0x00) && 
+							if ((work_item2.item.data[10] > 0x00) &&
 								(!(work_item2.item.data[10] & 128)))
 							{
 								num_attribs++;
@@ -9439,7 +9440,7 @@ void Send60 (BANANA* client)
 		}
 		if ((!dont_send) && (!client->todc))
 		{
-			if ( client->lobbyNum < 0x10 )				
+			if ( client->lobbyNum < 0x10 )
 				SendToLobby ( client->lobby, 12, &client->decryptbuf[0], size, client->guildcard);
 			else
 				SendToLobby ( client->lobby, 4, &client->decryptbuf[0], size, client->guildcard);
@@ -9497,7 +9498,7 @@ void GenerateRandomAttributes (unsigned char sid, GAME_ITEM* i, LOBBY* l, BANANA
 		default:
 			area = l->floor[client->clientID ];
 			break;
-		}	
+		}
 		break;
 	case 0x02:
 		switch ( l->floor[client->clientID ] )
@@ -9525,7 +9526,7 @@ void GenerateRandomAttributes (unsigned char sid, GAME_ITEM* i, LOBBY* l, BANANA
 			else
 				area = 0x0A;
 			break;
-		}	
+		}
 		break;
 	case 0x03:
 		area = l->floor[client->clientID ] + 1;
@@ -9583,7 +9584,7 @@ void GenerateRandomAttributes (unsigned char sid, GAME_ITEM* i, LOBBY* l, BANANA
 
 		num_percents = 0;
 
-		if ( ( i->item.data[1] == 0x33 ) || 
+		if ( ( i->item.data[1] == 0x33 ) ||
 			 ( i->item.data[1] == 0xAB ) ) // SJS and Lame max 2 percents
 			max_percent = 2;
 		else
@@ -9626,7 +9627,7 @@ void GenerateRandomAttributes (unsigned char sid, GAME_ITEM* i, LOBBY* l, BANANA
 
 			// Slots
 			if ( l->episode == 0x02 )
-				i->item.data[5] = slots_ep2[sid][l->difficulty][mt_lrand() % 4096]; 
+				i->item.data[5] = slots_ep2[sid][l->difficulty][mt_lrand() % 4096];
 			else
 				i->item.data[5] = slots_ep1[sid][l->difficulty][mt_lrand() % 4096];
 			break;
@@ -9719,7 +9720,7 @@ void GenerateCommonItem (int item_type, int is_enemy, unsigned char sid, GAME_IT
 		default:
 			area = l->floor[client->clientID ];
 			break;
-		}	
+		}
 		break;
 	case 0x02:
 		switch ( l->floor[client->clientID ] )
@@ -9747,7 +9748,7 @@ void GenerateCommonItem (int item_type, int is_enemy, unsigned char sid, GAME_IT
 			else
 				area = 0x0A;
 			break;
-		}	
+		}
 		break;
 	case 0x03:
 		area = l->floor[client->clientID ] + 1;
@@ -9883,7 +9884,7 @@ void GenerateCommonItem (int item_type, int is_enemy, unsigned char sid, GAME_IT
 
 		i->item.data[3] = (unsigned char) ch;
 
-		break;		
+		break;
 	case 0x01:
 		r = mt_lrand() % 100;
 		if (!is_enemy)
@@ -9920,7 +9921,7 @@ void GenerateCommonItem (int item_type, int is_enemy, unsigned char sid, GAME_IT
 
 			// Slots
 			if ( l->episode == 0x02 )
-				i->item.data[5] = slots_ep2[sid][l->difficulty][mt_lrand() % 4096]; 
+				i->item.data[5] = slots_ep2[sid][l->difficulty][mt_lrand() % 4096];
 			else
 				i->item.data[5] = slots_ep1[sid][l->difficulty][mt_lrand() % 4096];
 
@@ -10012,7 +10013,7 @@ void Send62 (BANANA* client)
 	int dont_send = 1;
 	LOBBY* l;
 	unsigned rt_index = 0;
-	unsigned rare_lookup, rare_rate, rare_item, 
+	unsigned rare_lookup, rare_rate, rare_item,
 		rare_roll, box_rare, ch, itemNum;
 	unsigned short mid, count;
 	unsigned char* rt_table;
@@ -10079,7 +10080,7 @@ void Send62 (BANANA* client)
 		break;
 	case 0x5A:
 		if ( client->lobbyNum > 0x0F )
-		{			
+		{
 			itemid = *(unsigned *) &client->decryptbuf[0x0C];
 			if ( AddItemToClient ( itemid, client ) == 1 )
 			{
@@ -10100,12 +10101,12 @@ void Send62 (BANANA* client)
 		break;
 	case 0x60:
 		// Requesting a drop from a monster.
-		if ( client->lobbyNum > 0x0F ) 
+		if ( client->lobbyNum > 0x0F )
 		{
 			if ( !l->drops_disabled )
 			{
 				mid = *(unsigned short*) &client->decryptbuf[0x0E];
-				mid &= 0xFFF;				
+				mid &= 0xFFF;
 
 				if ( ( mid < 0xB50 ) && ( l->monsterData[mid].drop == 0 ) )
 				{
@@ -10136,8 +10137,8 @@ void Send62 (BANANA* client)
 						}
 						else
 							meseta = rt_index;
-						if ( ( l->episode == 0x03 ) && 
-							 ( rt_index >= 19 ) && 
+						if ( ( l->episode == 0x03 ) &&
+							 ( rt_index >= 19 ) &&
 							 ( rt_index <= 21 ) )
 							DAR = 1;
 						else
@@ -10305,7 +10306,7 @@ void Send62 (BANANA* client)
 									if (l->gameItem[itemNum].item.data[0] == 0x04)
 										GenerateCommonItem (0x04, 0, client->character.sectionID, &l->gameItem[itemNum], l, client);
 									else
-										if ((l->gameItem[itemNum].item.data[0] == 0x00) && 
+										if ((l->gameItem[itemNum].item.data[0] == 0x00) &&
 											(l->gameItem[itemNum].item.data[1] == 0x00))
 											GenerateCommonItem (0xFF, 0, client->character.sectionID, &l->gameItem[itemNum], l, client);
 										else
@@ -10365,7 +10366,7 @@ void Send62 (BANANA* client)
 							default:
 								floor_check = l->floor[client->clientID ];
 								break;
-							}	
+							}
 							break;
 						case 0x02:
 							switch ( l->floor[client->clientID ] )
@@ -10393,7 +10394,7 @@ void Send62 (BANANA* client)
 								else
 									floor_check = 10;
 								break;
-							}	
+							}
 							break;
 						case 0x03:
 							floor_check = l->floor[client->clientID ];
@@ -10464,8 +10465,8 @@ void Send62 (BANANA* client)
 	case 0xB5:
 		// Client requesting shop
 		if ( client->lobbyNum > 0x0F )
-		{			 
-			if ((l->floor[client->clientID] == 0) 
+		{
+			if ((l->floor[client->clientID] == 0)
 				&& (client->decryptbuf[0x0C] < 0x03))
 			{
 				client->doneshop[client->decryptbuf[0x0C]] = shopidx[client->character.level] + ( 333 * ((unsigned)client->decryptbuf[0x0C]) ) + ( mt_lrand() % 333 ) ;
@@ -10482,7 +10483,7 @@ void Send62 (BANANA* client)
 		if ( client->lobbyNum > 0x0F )
 		{
 			if ((l->floor[client->clientID] == 0)
-				&& (client->decryptbuf[0x10] < 0x03) 
+				&& (client->decryptbuf[0x10] < 0x03)
 				&& (client->doneshop[client->decryptbuf[0x10]]))
 			{
 				if (client->decryptbuf[0x11] < shops[client->doneshop[client->decryptbuf[0x10]]].num_items)
@@ -10685,7 +10686,7 @@ void Send62 (BANANA* client)
 			{
 				switch (client->decryptbuf[0x14])
 				{
-				case 0x00: 
+				case 0x00:
 					// Making a deposit
 					itemid = *(unsigned *) &client->decryptbuf[0x0C];
 					if (itemid == 0xFFFFFFFF)
@@ -10716,7 +10717,7 @@ void Send62 (BANANA* client)
 								SortBankItems(client);
 						}
 						else
-						{						
+						{
 							Send1A ("Can't deposit.  Bank is full.", client);
 							client->todc = 1;
 						}
@@ -10894,7 +10895,7 @@ void Send62 (BANANA* client)
 
 			if (backup_item.item.itemid)
 			{
-				DeleteFromInventory (&backup_item, 1, client);					
+				DeleteFromInventory (&backup_item, 1, client);
 				if (!client->todc)
 				{
 					if (backup_item.item.data[0] == 0x02)
@@ -11248,7 +11249,7 @@ void WriteLog(char *fmt, ...)
 
 	GetLocalTime (&rawtime);
 	va_start (args, fmt);
-	strcpy (text + vsprintf( text,fmt,args), "\r\n"); 
+	strcpy (text + vsprintf( text,fmt,args), "\r\n");
 	va_end (args);
 
 	fp = fopen ( "ship.log", "a");
@@ -11257,11 +11258,11 @@ void WriteLog(char *fmt, ...)
 		printf ("Unable to log to ship.log\n");
 	}
 
-	fprintf (fp, "[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear, 
+	fprintf (fp, "[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear,
 		rawtime.wHour, rawtime.wMinute, text);
 	fclose (fp);
 
-	printf ("[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear, 
+	printf ("[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear,
 		rawtime.wHour, rawtime.wMinute, text);
 }
 
@@ -11278,7 +11279,7 @@ void WriteGM(char *fmt, ...)
 
 	GetLocalTime (&rawtime);
 	va_start (args, fmt);
-	strcpy (text + vsprintf( text,fmt,args), "\r\n"); 
+	strcpy (text + vsprintf( text,fmt,args), "\r\n");
 	va_end (args);
 
 	fp = fopen ( "gm.log", "a");
@@ -11287,11 +11288,11 @@ void WriteGM(char *fmt, ...)
 		printf ("Unable to log to gm.log\n");
 	}
 
-	fprintf (fp, "[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear, 
+	fprintf (fp, "[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear,
 		rawtime.wHour, rawtime.wMinute, text);
 	fclose (fp);
 
-	printf ("[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear, 
+	printf ("[%02u-%02u-%u, %02u:%02u] %s", rawtime.wMonth, rawtime.wDay, rawtime.wYear,
 		rawtime.wHour, rawtime.wMinute, text);
 }
 
@@ -11454,7 +11455,7 @@ void Send06 (BANANA* client)
 				{
 					npcID = atoi ( myArgs[0] );
 
-					if ( npcID > 7 ) 
+					if ( npcID > 7 )
 					{
 						if ( ( npcID > 11 ) || ( !ship_support_extnpc ) )
 							npcID = 7;
@@ -11507,13 +11508,13 @@ void Send06 (BANANA* client)
 				{
 					l->redbox = 0;
 					SendB0 ("Red box mode turned off.", client);
-					WriteGM ("GM %u has deactivated redbox mode", client->guildcard ); 
+					WriteGM ("GM %u has deactivated redbox mode", client->guildcard );
 				}
 				else
 				{
 					l->redbox = 1;
 					SendB0 ("Red box mode turned on!", client);
-					WriteGM ("GM %u has activated redbox mode", client->guildcard ); 
+					WriteGM ("GM %u has activated redbox mode", client->guildcard );
 				}
 			}
 
@@ -11526,12 +11527,12 @@ void Send06 (BANANA* client)
 					if ( myCmdArgs < 4 )
 						SendB0 ("You must specify at least four arguments for the desired item.", client);
 					else
-						if ( strlen ( myArgs[0] ) < 8 ) 
+						if ( strlen ( myArgs[0] ) < 8 )
 							SendB0 ("Main arguments is an incorrect length.", client);
 						else
 						{
 							if ( ( strlen ( myArgs[1] ) < 8 ) ||
-								( strlen ( myArgs[2] ) < 8 ) || 
+								( strlen ( myArgs[2] ) < 8 ) ||
 								( strlen ( myArgs[3] ) < 8 ) )
 								SendB0 ("Some arguments were incorrect and replaced.", client);
 
@@ -11546,7 +11547,7 @@ void Send06 (BANANA* client)
 							l->gameItem[itemNum].item.data[3]  = hexToByte (&myArgs[0][6]);
 
 
-							if ( strlen ( myArgs[1] ) >= 8 ) 
+							if ( strlen ( myArgs[1] ) >= 8 )
 							{
 								_strupr ( myArgs[1] );
 								l->gameItem[itemNum].item.data[4]  = hexToByte (&myArgs[1][0]);
@@ -11562,7 +11563,7 @@ void Send06 (BANANA* client)
 								l->gameItem[itemNum].item.data[7]  = 0;
 							}
 
-							if ( strlen ( myArgs[2] ) >= 8 ) 
+							if ( strlen ( myArgs[2] ) >= 8 )
 							{
 								_strupr ( myArgs[2] );
 								l->gameItem[itemNum].item.data[8]  = hexToByte (&myArgs[2][0]);
@@ -11578,7 +11579,7 @@ void Send06 (BANANA* client)
 								l->gameItem[itemNum].item.data[11] = 0;
 							}
 
-							if ( strlen ( myArgs[3] ) >= 8 ) 
+							if ( strlen ( myArgs[3] ) >= 8 )
 							{
 								_strupr ( myArgs[3] );
 								l->gameItem[itemNum].item.data2[0]  = hexToByte (&myArgs[3][0]);
@@ -11628,7 +11629,7 @@ void Send06 (BANANA* client)
 							*(unsigned *) &PacketData[0x28] = *(unsigned *) &l->gameItem[itemNum].item.data2[0];
 							SendToLobby ( client->lobby, 4, &PacketData[0], 0x2C, 0);
 							SendB0 ("Item created.", client);
-						}								
+						}
 			}
 
 			if (( !strcmp ( myCommand, "give" ) )  && (client->isgm))
@@ -11645,7 +11646,7 @@ void Send06 (BANANA* client)
 						else
 						{
 							if ( ( strlen ( myArgs[1] ) < 8 ) ||
-								 ( strlen ( myArgs[2] ) < 8 ) || 
+								 ( strlen ( myArgs[2] ) < 8 ) ||
 								 ( strlen ( myArgs[3] ) < 8 ) )
 								SendB0 ("Some arguments were incorrect and replaced.", client);
 
@@ -11658,7 +11659,7 @@ void Send06 (BANANA* client)
 							ii.item.data[3]  = hexToByte (&myArgs[0][6]);
 
 
-							if ( strlen ( myArgs[1] ) >= 8 ) 
+							if ( strlen ( myArgs[1] ) >= 8 )
 							{
 								_strupr ( myArgs[1] );
 								ii.item.data[4]  = hexToByte (&myArgs[1][0]);
@@ -11674,7 +11675,7 @@ void Send06 (BANANA* client)
 								ii.item.data[7]  = 0;
 							}
 
-							if ( strlen ( myArgs[2] ) >= 8 ) 
+							if ( strlen ( myArgs[2] ) >= 8 )
 							{
 								_strupr ( myArgs[2] );
 								ii.item.data[8]  = hexToByte (&myArgs[2][0]);
@@ -11690,7 +11691,7 @@ void Send06 (BANANA* client)
 								ii.item.data[11] = 0;
 							}
 
-							if ( strlen ( myArgs[3] ) >= 8 ) 
+							if ( strlen ( myArgs[3] ) >= 8 )
 							{
 								_strupr ( myArgs[3] );
 								ii.item.data2[0]  = hexToByte (&myArgs[3][0]);
@@ -11813,7 +11814,7 @@ void Send06 (BANANA* client)
 									SendB0 ("You may not ban this user.", client);
 								else
 								{
-									if ( ban ( gc_num, (unsigned*) &connections[connectNum]->ipaddr, 
+									if ( ban ( gc_num, (unsigned*) &connections[connectNum]->ipaddr,
 										&connections[connectNum]->hwinfo, 1, client ) )
 									{
 										WriteGM ("GM %u has banned user %u (%s)", client->guildcard, gc_num, Unicode_to_ASCII ((unsigned short*) &connections[connectNum]->character.name[4]));
@@ -11861,7 +11862,7 @@ void Send06 (BANANA* client)
 									SendB0 ("You may not ban this user.", client);
 								else
 								{
-									if ( ban ( gc_num, (unsigned*) &connections[connectNum]->ipaddr, 
+									if ( ban ( gc_num, (unsigned*) &connections[connectNum]->ipaddr,
 										&connections[connectNum]->hwinfo, 2, client ) )
 									{
 										WriteGM ("GM %u has IP banned user %u (%s)", client->guildcard, gc_num, Unicode_to_ASCII ((unsigned short*) &connections[connectNum]->character.name[4]));
@@ -11909,7 +11910,7 @@ void Send06 (BANANA* client)
 									SendB0 ("You may not ban this user.", client);
 								else
 								{
-									if ( ban ( gc_num, (unsigned*) &connections[connectNum]->ipaddr, 
+									if ( ban ( gc_num, (unsigned*) &connections[connectNum]->ipaddr,
 										&connections[connectNum]->hwinfo, 3, client ) )
 									{
 										WriteGM ("GM %u has HW banned user %u (%s)", client->guildcard, gc_num, Unicode_to_ASCII ((unsigned short*) &connections[connectNum]->character.name[4]));
@@ -12074,7 +12075,7 @@ void Send06 (BANANA* client)
 							if ((connections[connectNum]->isgm) && (isLocalGM(client->guildcard)))
 								SendB0 ("You may not silence this user.", client);
 							else
-							{							
+							{
 								if (toggle_stfu(connections[connectNum]->guildcard, client))
 								{
 									WriteGM ("GM %u has silenced user %u (%s)", client->guildcard, gc_num, Unicode_to_ASCII ((unsigned short*) &connections[connectNum]->character.name[4]));
@@ -12376,7 +12377,7 @@ void Command09(BANANA* client)
 						lb[2] = 0x00;
 					}
 					wstrcpy_char (&PacketData[Packet11_Length], &lb[0]);
-					Packet11_Length += wstrlen ((unsigned short*) &PacketData[Packet11_Length]);					
+					Packet11_Length += wstrlen ((unsigned short*) &PacketData[Packet11_Length]);
 					PacketData[Packet11_Length++] = 0x0A;
 					PacketData[Packet11_Length++] = 0x00;
 					if (l->quest_loaded)
@@ -12956,7 +12957,7 @@ void Command10(unsigned blockServer, BANANA* client)
 
 						if (client->gotchardata)
 						{
-							client->character.playTime += (unsigned) servertime - client->connected; 
+							client->character.playTime += (unsigned) servertime - client->connected;
 							ShipSend04 (0x02, client, logon);
 							client->gotchardata = 0;
 							client->released = 1;
@@ -12997,7 +12998,7 @@ void Command10(unsigned blockServer, BANANA* client)
 								client->releasePort = shipdata[ch].port;
 							}
 							else
-								Send19 (shipdata[ch].ipaddr[0], shipdata[ch].ipaddr[1], 
+								Send19 (shipdata[ch].ipaddr[0], shipdata[ch].ipaddr[1],
 								shipdata[ch].ipaddr[2], shipdata[ch].ipaddr[3],
 								shipdata[ch].port, client);
 
@@ -13040,7 +13041,7 @@ void CommandD9 (BANANA* client)
 }
 
 
-void AddGuildCard (unsigned myGC, unsigned friendGC, unsigned char* friendName, 
+void AddGuildCard (unsigned myGC, unsigned friendGC, unsigned char* friendName,
 				   unsigned char* friendText, unsigned char friendSecID, unsigned char friendClass,
 				   ORANGE* ship)
 {
@@ -13191,7 +13192,7 @@ void CommandE8 (BANANA* client)
 		break;
 	case 0x09:
 		// Write comment on user
-		// E8 09 writing a comment on a user...  not sure were comment goes in the DC packet... 
+		// E8 09 writing a comment on a user...  not sure were comment goes in the DC packet...
 		// User @ 0x08 comment @ 0x0C
 		gcn = *(unsigned*) &client->decryptbuf[0x08];
 		ModifyGuildCardComment (client->guildcard, gcn, (unsigned short*) &client->decryptbuf[0x0E], logon);
@@ -13872,7 +13873,7 @@ void BlockProcessPacket (BANANA* client)
 						else
 							Send01 ("Lobby is full!", client);
 					}
-					else 
+					else
 						Send01 ("You must wait\nawhile before\ntrying that.", client);
 				}
 			}
@@ -13961,7 +13962,7 @@ void BlockProcessPacket (BANANA* client)
 				}
 
 				if (all_quest)
-				{ 
+				{
 					// Send the 0xAC when all clients have the quest
 
 					client->decryptbuf[0x00] = 0x08;
@@ -14518,7 +14519,7 @@ void LoadQuests (const char* filename, unsigned category)
 								exit (1);
 							}
 							qps = *(unsigned short*) &ql->qdata[ch];
-							if (qps % 8) 
+							if (qps % 8)
 								qps += ( 8 - ( qps % 8 ) );
 							ch += qps;
 					}
@@ -14581,7 +14582,7 @@ void LoadQuests (const char* filename, unsigned category)
 								}
 
 								qps = *(unsigned short*) &ql->qdata[ch];
-								if (qps % 8) 
+								if (qps % 8)
 									qps += ( 8 - ( qps % 8 ) );
 								ch += qps;
 						}
@@ -14972,7 +14973,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam 
 		switch (lParam)
 		{
 		case WM_LBUTTONDBLCLK:
-			switch (wParam) 
+			switch (wParam)
 			{
 			case 100:
 				if (program_hidden)
@@ -15789,8 +15790,8 @@ int main()
 		exit (1);
 	}
 
-	hwndWindow = CreateWindow ("sodaboy","hidden window", WS_MINIMIZE, 1, 1, 1, 1, 
-		NULL, 
+	hwndWindow = CreateWindow ("sodaboy","hidden window", WS_MINIMIZE, 1, 1, 1, 1,
+		NULL,
 		NULL,
 		hinst,
 		NULL );
@@ -15856,7 +15857,7 @@ int main()
 			connectNum = serverConnectionList[ch];
 			workConnect = connections[connectNum];
 
-			if (workConnect->plySockfd >= 0) 
+			if (workConnect->plySockfd >= 0)
 			{
 				if (blockConnections)
 				{
@@ -15956,7 +15957,7 @@ int main()
 
 		/* Check sockets for activity. */
 
-		if ( select ( nfds + 1, &ReadFDs, &WriteFDs, &ExceptFDs, &select_timeout ) > 0 ) 
+		if ( select ( nfds + 1, &ReadFDs, &WriteFDs, &ExceptFDs, &select_timeout ) > 0 )
 		{
 			if (FD_ISSET (ship_sockfd, &ReadFDs))
 			{
@@ -16043,7 +16044,7 @@ int main()
 							printf ("Could not send data to client...\n");
 							printf ("Socket Error %u.\n", wserror );
 							*/
-							initialize_connection (workConnect);							
+							initialize_connection (workConnect);
 						}
 						else
 						{
@@ -16308,7 +16309,7 @@ int tcp_sock_open(struct in_addr ip, int port)
 		debug_perror ("Press [ENTER] to quit...");
 		gets(&dp[0]);
 		exit(1);
-	} 
+	}
 
 	sa.sin_family = AF_INET;
 	memcpy((void *)&sa.sin_addr, (void *)&ip, sizeof(struct in_addr));
@@ -16331,7 +16332,7 @@ int tcp_sock_open(struct in_addr ip, int port)
 
 /*****************************************************************************
 * same as debug_perror but writes to debug output.
-* 
+*
 *****************************************************************************/
 void debug_perror( char * msg ) {
 	debug( "%s : %s\n" , msg , strerror(errno) );
@@ -16345,7 +16346,7 @@ void debug(char *fmt, ...)
 	char text[ MAX_MESG_LEN ];
 
 	va_start (args, fmt);
-	strcpy (text + vsprintf( text,fmt,args), "\r\n"); 
+	strcpy (text + vsprintf( text,fmt,args), "\r\n");
 	va_end (args);
 
 	fprintf( stderr, "%s", text);
@@ -16439,7 +16440,7 @@ void encryptcopy (BANANA* client, const unsigned char* src, unsigned size)
 	unsigned char* dest;
 
 	// Bad pointer check...
-	if ( ((unsigned) client < (unsigned)connections[0]) || 
+	if ( ((unsigned) client < (unsigned)connections[0]) ||
 		 ((unsigned) client > (unsigned)connections[serverMaxConnections-1]) )
 		return;
 	if (TCP_BUFFER_SIZE - client->snddata < ( (int) size + 7 ) )

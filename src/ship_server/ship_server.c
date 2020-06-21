@@ -16011,7 +16011,7 @@ int main()
 								start_encryption (workConnect);
 								/* Doin' block process... */
 								workConnect->block = ch+1;
-								blocks[client->block - 1]->count++;
+								blocks[workConnect->block - 1]->count++;
 							}
 							else
 								initialize_connection ( workConnect );

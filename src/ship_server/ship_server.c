@@ -5487,7 +5487,6 @@ void LogonProcessPacket (ORANGE* ship)
 						}
 						else
 						{
-							blocks[client->block - 1]->count++;
 							// Request E7 information from server...
 							Send83(client); // Lobby data
 							ShipSend04 (0x00, client, logon);
@@ -16012,6 +16011,7 @@ int main()
 								start_encryption (workConnect);
 								/* Doin' block process... */
 								workConnect->block = ch+1;
+								blocks[client->block - 1]->count++;
 							}
 							else
 								initialize_connection ( workConnect );

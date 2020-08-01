@@ -2683,15 +2683,14 @@ void Send67 (BANANA* client, unsigned char preferred)
 						// Prevent crashing with NPCs
 						if (lClient->character.skinFlag)
 							memset (&PacketData[Offset+0x3A8], 0, 10);
-						Offset += 1244;
 						
 						if (lClient->isgm == 1)
-							*(unsigned *) &PacketData[Offset2 + 0x3CA] = globalName;
+							*(unsigned *) &PacketData[Offset+0x388] = globalName;
 						else
 							if (isLocalGM(lClient->guildcard))
-								*(unsigned *) &PacketData[Offset2 + 0x3CA] = localName;
+								*(unsigned *) &PacketData[Offset+0x388] = localName;
 							else
-								*(unsigned *) &PacketData[Offset2 + 0x3CA] = normalName;
+								*(unsigned *) &PacketData[Offset+0x388] = normalName;
 						if ((lClient->guildcard == client->guildcard) && (l->lobbyCount > 1))
 						{
 							memcpy (&PacketData2[0x00], &PacketData[0], 0x14 );
@@ -2702,6 +2701,8 @@ void Send67 (BANANA* client, unsigned char preferred)
 							memcpy (&PacketData2[0x14], &PacketData[Offset2], 1312 );
 							SendToLobby ( client->lobby, 12, &PacketData2[0x00], 1332, client->guildcard );
 						}
+						
+						Offset += 1244;
 					}
 				}
 				*(unsigned short*) &PacketData[0] = (unsigned short) Offset;

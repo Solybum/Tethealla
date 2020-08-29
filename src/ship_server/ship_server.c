@@ -974,14 +974,16 @@ void initialize_connection (BANANA* connect)
 	{
 		removeClientFromLobby (connect);
 
-		if ((connect->block) && (connect->block <= serverBlocks))
-			blocks[connect->block - 1]->count--;
-
 		if (connect->gotchardata == 1)
 		{
 			connect->character.playTime += (unsigned) servertime - connect->connected;
 			ShipSend04 (0x02, connect, logon);
 		}
+	}
+
+	if ((connect->block) && (connect->block <= serverBlocks))
+	{
+		blocks[connect->block - 1]->count--;
 	}
 
 	if (connect->plySockfd >= 0)

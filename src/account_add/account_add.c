@@ -230,8 +230,9 @@ main(int argc, char* argv[])
         mysql_real_connect(myData, &mySQL_Host[0], &mySQL_Username[0], &mySQL_Password[0], NULL, mySQL_Port,
             NULL, 0))
     {
-        if (mysql_select_db(myData, &mySQL_Database[0]) < 0) {
+        if (mysql_select_db(myData, &mySQL_Database[0]) != 0) {
             printf("Can't select the %s database !\n", mySQL_Database);
+            printf("%i: %s\n", mysql_errno(myData), mysql_error(myData));
             mysql_close(myData);
             return 2;
         }
@@ -295,6 +296,7 @@ main(int argc, char* argv[])
             else
             {
                 printf("Couldn't query the MySQL server.\n");
+                printf("%i: %s\n", mysql_errno(myData), mysql_error(myData));
                 return 1;
             }
 #endif
@@ -368,6 +370,7 @@ main(int argc, char* argv[])
         else
         {
             printf("Couldn't query the MySQL server.\n");
+            printf("%i: %s\n", mysql_errno(myData), mysql_error(myData));
             return 1;
         }
 #endif
@@ -405,6 +408,7 @@ main(int argc, char* argv[])
     else
     {
         printf("Couldn't query the MySQL server.\n");
+        printf("%i: %s\n", mysql_errno(myData), mysql_error(myData));
         return 1;
     }
 #endif
@@ -472,6 +476,7 @@ main(int argc, char* argv[])
     else
     {
         printf("Couldn't query the MySQL server.\n");
+        printf("%i: %s\n", mysql_errno(myData), mysql_error(myData));
         return 1;
     }
     mysql_close(myData);

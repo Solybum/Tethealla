@@ -178,8 +178,9 @@ int main()
 		mysql_real_connect(myData, &mySQL_Host[0], &mySQL_Username[0], &mySQL_Password[0], NULL, mySQL_Port,
 			NULL, 0))
 	{
-		if (mysql_select_db(myData, &mySQL_Database[0]) < 0) {
+		if (mysql_select_db(myData, &mySQL_Database[0]) != 0) {
 			printf("Can't select the %s database !\n", mySQL_Database);
+			printf("%i: %s\n", mysql_errno(myData), mysql_error(myData));
 			mysql_close(myData);
 			return 2;
 		}
@@ -223,7 +224,7 @@ int main()
 
 	mysql_real_escape_string(myData, &ship_string[0], &ship_key[0], 0x80);
 
-	sprintf_s(myQuery, _countof(myQuery), "INSERT into ship_data (rc4key) VALUES ('%s')", ship_string);
+	sprintf_s(myQuery, _countof(myQuery), "INSERT into ship_data (rc4keys) VALUES ('%s')", ship_string);
 	if (!mysql_query(myData, &myQuery[0]))
 	{
 		ship_index = (unsigned)mysql_insert_id(myData);
@@ -232,6 +233,7 @@ int main()
 	else
 	{
 		printf("Couldn't query the MySQL server.\n");
+		printf("%i: %s\n", mysql_errno(myData), mysql_error(myData));
 		return 1;
 	}
 

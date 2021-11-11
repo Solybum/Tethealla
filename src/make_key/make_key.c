@@ -224,7 +224,7 @@ int main()
 
 	mysql_real_escape_string(myData, &ship_string[0], &ship_key[0], 0x80);
 
-	sprintf_s(myQuery, _countof(myQuery), "INSERT into ship_data (rc4keys) VALUES ('%s')", ship_string);
+	sprintf_s(myQuery, _countof(myQuery), "INSERT into ship_data (rc4key) VALUES ('%s')", ship_string);
 	if (!mysql_query(myData, &myQuery[0]))
 	{
 		ship_index = (unsigned)mysql_insert_id(myData);

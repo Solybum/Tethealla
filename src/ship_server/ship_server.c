@@ -1664,12 +1664,19 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			else
 				mm->exp = l->bptable[0x37].XP;
 
-			for (ch=0;ch<510;ch++)
+			for (ch=0;ch<512;ch++)
 			{
 				l->mapIndex++;
 				mm++;
 				mm->base = 200;
-				mm->exp = l->bptable[0x35].XP;
+				if (l->difficulty == 3)
+				{
+					mm->exp = l->bptable[0x39].XP;
+				}
+				else
+				{
+					mm->exp = l->bptable[0x35].XP;
+				}
 			}
 			break;
 		case 202:

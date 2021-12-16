@@ -2025,6 +2025,13 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 					mm->rt_index = 19;
 			}
 			mm->exp = l->bptable [0x22].XP;
+
+			if ( ( mm->reserved[0] >> 16 ) == 0 )
+			{
+				// Add 24 clones if the count is 0
+				l->mapIndex += 24;
+			}
+
 			break;
 		default:
 			//debug ("enemy not handled: %u", mm->base);

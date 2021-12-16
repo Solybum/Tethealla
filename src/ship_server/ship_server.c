@@ -1238,7 +1238,7 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 	unsigned ch, ch2;
 	unsigned num_recons;
 	int r;
-	
+
 	for (ch2=0;ch2<num_records;ch2++)
 	{
 		if ( l->mapIndex >= 0xB50 )
@@ -2299,7 +2299,7 @@ void initialize_game (BANANA* client)
 				l->bptable = &ep2battle[0x60 * l->difficulty];
 				LoadMapData ( l, 0, "map\\map_labo00_00e.dat");
 				LoadObjectData ( l, 0, "map\\map_labo00_00o.dat");
-				
+
 				l->gameMap[8]  = (unsigned char) mt_lrand() % 2; // Temple 1
 				l->gameMap[12] = 0x00;
 				LoadMapData ( l, 0, Temple1_Online_Maps [l->gameMap[8]] );
@@ -2360,7 +2360,7 @@ void initialize_game (BANANA* client)
 				l->bptable = &ep2battle_off[0x60 * l->difficulty];
 				LoadMapData ( l, 0, "map\\map_labo00_00e_s.dat");
 				LoadObjectData ( l, 0, "map\\map_labo00_00o_s.dat");
-				
+
 				l->gameMap[8]  = (unsigned char) mt_lrand() % 2; // Temple 1
 				l->gameMap[12] = 0x00;
 				LoadMapData ( l, 0, Temple1_Offline_Maps [l->gameMap[8]] );
@@ -2624,7 +2624,7 @@ void Send67 (BANANA* client, unsigned char preferred)
 	client->lobbyOK = 0;
 
 	ch = 0;
-	
+
 	b = blocks[client->block - 1];
 	if ((preferred != 0xFF) && (preferred < 0x0F))
 	{
@@ -2685,7 +2685,7 @@ void Send67 (BANANA* client, unsigned char preferred)
 						// Prevent crashing with NPCs
 						if (lClient->character.skinFlag)
 							memset (&PacketData[Offset+0x3A8], 0, 10);
-						
+
 						if (lClient->isgm == 1)
 							*(unsigned *) &PacketData[Offset+0x388] = globalName;
 						else
@@ -2703,7 +2703,7 @@ void Send67 (BANANA* client, unsigned char preferred)
 							memcpy (&PacketData2[0x14], &PacketData[Offset2], 1312 );
 							SendToLobby ( client->lobby, 12, &PacketData2[0x00], 1332, client->guildcard );
 						}
-						
+
 						Offset += 1244;
 					}
 				}
@@ -3836,7 +3836,7 @@ void SendItemToEnd (unsigned itemid, BANANA* client)
 	}
 
 	CleanUpInventory (client);
-	
+
 	// Add item to client.
 
 	client->character.inventory[client->character.inventoryUse] = i;
@@ -5101,7 +5101,7 @@ void LogonProcessPacket (ORANGE* ship)
 			{
 				unsigned guildcard;
 				BANANA* client;
-				
+
 				guildcard = *(unsigned *) &ship->decryptbuf[0x06];
 
 				for (ch=0;ch<serverNumConnections;ch++)
@@ -6469,7 +6469,7 @@ void FeedMag (unsigned magid, unsigned itemid, BANANA* client)
 				}
 			}
 		}
-			
+
 		// Feed that mag (Updates to code by Lee from schtserv.com)
 		switch (m->mtype)
 		{
@@ -7845,7 +7845,7 @@ void SkipToLevel (unsigned short target_level, BANANA* client, int quiet)
 		client->character.ATA += playerLevelData[client->character._class][client->character.level].ATA;
 		client->character.level++;
 	}
-	
+
 	client->character.XP = tnlxp [target_level - 1];
 
 	finalDFP = client->character.DFP;
@@ -9839,7 +9839,7 @@ void GenerateCommonItem (int item_type, int is_enemy, unsigned char sid, GAME_IT
 			if (i->item.data[2] > 0x04)
 				i->item.data[2] = 0x04;
 		}
-		
+
 		r = 100 - ( mt_lrand() % 100 );
 
 		if ( ( r > ptd->element_probability[area] ) && ( ptd->element_ranking[area] ) )
@@ -10269,7 +10269,7 @@ void Send62 (BANANA* client)
 				{
 					box_rare = 0;
 					mb = 0;
-					
+
 					//debug ("quest loaded: %i", l->quest_loaded);
 
 					if ( ( l->quest_loaded ) && ( (unsigned) l->quest_loaded <= numQuests ) )
@@ -10543,7 +10543,7 @@ void Send62 (BANANA* client)
 
 					i = &client->character.inventory[ch];
 					attrib = i->item.data[4] & ~(0x80);
-					
+
 					client->tekked = *i;
 
 					if ( attrib < 0x29)
@@ -10868,7 +10868,7 @@ void Send62 (BANANA* client)
 				lClient = l->client[client->decryptbuf[0x0A]];
 				target_lv = lClient->character.level;
 				target_lv += client->decryptbuf[0x0C];
-				
+
 				if ( target_lv > 199 )
 					 target_lv = 199;
 
@@ -14180,7 +14180,7 @@ void BlockProcessPacket (BANANA* client)
 						break;
 					}
 				}
-				
+
 				if (banned)
 				{
 					Send1A ("You are banned from this ship.", client);
@@ -14802,7 +14802,7 @@ void LoadCSV(const char* filename)
 	//unsigned ch4;
 	int open_quote = 0;
 	char* csv_param;
-	
+
 	csv_lines = 0;
 	memset (&csv_params, 0, sizeof (csv_params));
 
@@ -15032,7 +15032,7 @@ int main()
 	WNDCLASS wc = {0};
 	HWND hwndWindow;
 	MSG msg;
-		
+
 	ch = 0;
 
 	consoleHwnd = GetConsoleWindow();
@@ -15060,7 +15060,7 @@ int main()
 	printf ("\n\n");
 
 	WSAStartup(MAKEWORD(1,1), &winsock_data);
-	
+
 	printf ("Loading configuration from ship.ini ... ");
 #ifdef LOG_60
 	debugfile = fopen ("60packets.txt", "a");
@@ -15575,7 +15575,7 @@ int main()
 	fclose ( fp );
 
 	printf ("OK!\n\n.. done!\n\nLoading quests...\n\n");
-	
+
 	memset (&quest_menus[0], 0, sizeof (quest_menus));
 
 	// 0 = Episode 1 Team
@@ -16517,7 +16517,7 @@ void pso_crypt_table_init_bb(PSO_CRYPT *pcry, const unsigned char *salt)
 	pcry->tbl[15] = 0xB5470917;
 	pcry->tbl[16] = 0x9216D5D9;
 	pcry->tbl[17] = 0x8979FB1B;
-	
+
 	*/
 
 	memcpy(&pcry->tbl[18], &bbtable[18], 4096);

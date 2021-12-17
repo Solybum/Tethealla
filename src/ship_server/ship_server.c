@@ -1513,16 +1513,16 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			}
 			break;
 		case 101:
-			// Pan Arms, Migium, Hidoom
+			// Pan Arms, Hidoom, Migium
 			mm->rt_index = 21;
 			mm->exp = l->bptable[0x31].XP;
 			l->mapIndex++;
 			mm++;
-			mm->rt_index = 22;
+			mm->rt_index = 23;
 			mm->exp = l->bptable[0x32].XP;
 			l->mapIndex++;
 			mm++;
-			mm->rt_index = 23;
+			mm->rt_index = 22;
 			mm->exp = l->bptable[0x33].XP;
 			break;
 		case 128:

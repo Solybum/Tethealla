@@ -1236,8 +1236,8 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 {
 	MAP_MONSTER* mm;
 	unsigned ch, ch2;
-	unsigned num_recons;
 	int r;
+	int child_count;
 
 	for (ch2=0;ch2<num_records;ch2++)
 	{
@@ -1350,15 +1350,28 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			break;
 		case 66:
 			// Monest + 30 Mothmants
+			child_count = mm->reserved[0] >> 16;
+			if (child_count == 0)
+			{
+				child_count = 30;
+			}
+
 			mm->exp = l->bptable[0x01].XP;
 			mm->rt_index = 4;
 
-			for (ch=0;ch<30;ch++)
+			for (ch = 0; ch < child_count; ch++)
 			{
+				if (l->mapIndex >= 0xB50)
+				{
+					break;
+				}
 				l->mapIndex++;
 				mm++;
-				mm->rt_index = 3;
-				mm->exp = l->bptable[0x00].XP;
+				if (ch < 30)
+				{
+					mm->rt_index = 3;
+					mm->exp = l->bptable[0x00].XP;
+				}
 			}
 			break;
 		case 67:
@@ -1657,7 +1670,7 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			mm->exp = l->bptable[0x25].XP;
 			break;
 		case 200:
-			// Dark Falz + 510 Helpers
+			// Dark Falz + 512 Helpers
 			mm->rt_index = 47;
 			if (l->difficulty)
 				mm->exp = l->bptable[0x38].XP; // Form 2
@@ -1807,11 +1820,13 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			// Recobox & Recons
 			mm->rt_index = 67;
 			mm->exp = l->bptable[0x41].XP;
-			num_recons = ( mm->reserved[0] >> 16 );
-			for (ch=0;ch<num_recons;ch++)
+			child_count = mm->reserved[0] >> 16;
+			for (ch = 0; ch < child_count; ch++)
 			{
-				if ( l->mapIndex >= 0xB50 )
+				if (l->mapIndex >= 0xB50)
+				{
 					break;
+				}
 				l->mapIndex++;
 				mm++;
 				mm->rt_index = 68;
@@ -2033,9 +2048,8 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			}
 			mm->exp = l->bptable [0x22].XP;
 
-			if ( ( mm->reserved[0] >> 16 ) == 0 )
+			if ((mm->reserved[0] >> 16 ) == 0)
 			{
-				// Add 24 clones if the count is 0
 				l->mapIndex += 24;
 			}
 
@@ -2044,8 +2058,10 @@ void ParseMapData (LOBBY* l, MAP_MONSTER* mapData, int aMob, unsigned num_record
 			//debug ("enemy not handled: %u", mm->base);
 			break;
 		}
-		if ( mm->reserved[0] >> 16 ) // Have to do
-			l->mapIndex += ( mm->reserved[0] >> 16 );
+		if ((mm->reserved[0] >> 16) != 0)
+		{
+			l->mapIndex += (mm->reserved[0] >> 16);
+		}
 		l->mapIndex++;
 	}
 }

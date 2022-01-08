@@ -981,7 +981,7 @@ void initialize_connection (BANANA* connect)
 		}
 	}
 
-	if ((connect->block) && (connect->block <= serverBlocks))
+	if ((connect->block > 0) && (connect->block <= serverBlocks))
 	{
 		blocks[connect->block - 1]->count--;
 	}
